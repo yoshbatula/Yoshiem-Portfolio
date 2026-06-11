@@ -43,14 +43,14 @@ const BOOT_MESSAGES = [
 const SPLASH_DURATION = 2200
 
 export default function LoadingPage() {
-  const [phase, setPhase] = useState('splash')        // 'splash' | 'boot'
+  const [phase, setPhase] = useState('splash')        
   const [splashFading, setSplashFading] = useState(false)
   const [visibleMessages, setVisibleMessages] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [complete, setComplete] = useState(false)
   const logRef = useRef(null)
 
-  // Splash → Boot transition
+  // Splash Boot transition
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
       setSplashFading(true)

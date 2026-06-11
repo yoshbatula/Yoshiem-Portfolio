@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
-/* ── Splash Screen ─────────────────────────────────────── */
+/* Splash Screen */
 .splash-screen {
   background: #000;
   display: flex;
@@ -22,7 +22,7 @@
   object-fit: contain;
 }
 
-/* ── Boot Log Screen ───────────────────────────────────── */
+/* Boot Log Screen */
 .boot-screen {
   background: #000;
   width: 100%;
@@ -51,7 +51,7 @@
   background: #2a2a2a;
 }
 
-/* ── Boot Line ─────────────────────────────────────────── */
+/* Boot Line */
 .boot-line {
   display: flex;
   align-items: flex-start;
@@ -81,7 +81,7 @@
   color: #cccccc;
 }
 
-/* ── Blinking Cursor ───────────────────────────────────── */
+/* Blinking Cursor */
 .boot-cursor {
   display: inline-block;
   width: 8px;
