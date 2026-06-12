@@ -2,8 +2,16 @@ import LockScreenNav from '../components/LockScreenNav'
 import LockScreenBg from '../../assets/LockScreenBG.png'
 import UserAvatar from '../../assets/UserAvatar.svg'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 export default function LockScreen() {
     const navigate = useNavigate()
+    const [isUnlocking, setUnlocking] = useState(false)
+
+    const handleUnlock = (e) => {
+        if (e.key !== 'Enter') return
+        setUnlocking(true)
+        setTimeout(() => navigate('/desktop'), 600)
+    }
     return (
         <>
             <LockScreenNav />
@@ -32,10 +40,10 @@ export default function LockScreen() {
                         
                         {/* Card & Help Text */}
                         
-                        <div className="flex flex-col items-center gap-6 ml-2">
+                        <div className="flex flex-col items-center gap-6 ml-2 relative">
                             
                             {/* User Card Container */}
-                            <div className="bg-white p-6 shadow-lg w-44">
+                            <div className={`bg-white p-6 shadow-lg w-44 transition-all duration-500 ${isUnlocking ? 'opacity-0 scale-95' : ''}`}>
                                 
                                 {/* User Avatar */}
                                 <div className="mb-4 h-40 flex items-center justify-center">
@@ -50,9 +58,16 @@ export default function LockScreen() {
                                 type="password" 
                                 placeholder="Password"
                                 className="w-full border border-gray-800 px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                                onKeyDown={(e) => e.key === 'Enter' && navigate('/desktop')}
+                                onKeyDown={handleUnlock}
                             />
                             </div>
+                            
+                            {/* Unlocking Spinner */}
+                            {isUnlocking && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-10 h-10 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                </div>
+                            )}
                             
                             {/* Help Text */}
                             <div className="text-white text-center mt-8 transform translate-x-[40px]">

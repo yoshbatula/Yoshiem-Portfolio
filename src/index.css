@@ -2,8 +2,8 @@
 @import 'jetbrains-mono/css/jetbrains-mono.css';
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-* {
-  font-family: 'JetBrains Mono', monospace;
+@theme {
+  --font-display: 'Jacques Francois Shadow', cursive;
 }
 
 html, body {
@@ -13,6 +13,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   background: black;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 #root {

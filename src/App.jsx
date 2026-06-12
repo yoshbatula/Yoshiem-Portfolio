@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoadingPage from './Pages/Loading-page/Loading-page'
 import LockScreen from './Pages/LockScreenPage/LockScreen'
-import Desktop from './Pages/Desktop-page/Desktop-page'
+import Desktop from './Pages/Desktop-page/Desktop'
 import './App.css'
 
 export default function App() {
