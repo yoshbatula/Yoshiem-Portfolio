@@ -2,10 +2,31 @@ import LockScreenNav from '../components/LockScreenNav'
 import LockScreenBg from '../../assets/LockScreenBG.png'
 import UserAvatar from '../../assets/UserAvatar.svg'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 export default function LockScreen() {
     const navigate = useNavigate()
     const [isUnlocking, setUnlocking] = useState(false)
+    const [time, setTime] = useState(new Date())
+
+    useEffect(() => {
+        const timer = setInterval(() => setTime(new Date()), 1000)
+        return () => clearInterval(timer)
+    }, [])
+
+    const formatTime = (date) => {
+        let hours = date.getHours()
+        const minutes = date.getMinutes().toString().padStart(2, '0')
+        const ampm = hours >= 12 ? 'PM' : 'AM'
+        hours = hours % 12 || 12
+        return `${hours}:${minutes}${ampm}`
+    }
+
+    const formatDate = (date) => {
+        const month = date.getMonth() + 1
+        const day = date.getDate()
+        const year = date.getFullYear()
+        return `${month}/${day}/${year}`
+    }
 
     const handleUnlock = (e) => {
         if (e.key !== 'Enter') return
@@ -26,8 +47,8 @@ export default function LockScreen() {
                     
                     {/* Left Section - Time & Navigation */}
                     <div className="absolute flex flex-col text-center left-100 top-1/2 -translate-y-1/2 ml-10z">
-                        <div className="text-white text-5xl font-light mb-2">9:38PM</div>
-                        <div className="text-white text-2xl font-light">6/11/2026</div>
+                        <div className="text-white text-5xl font-light mb-5">{formatTime(time)}</div>
+                        <div className="text-white text-2xl font-light">{formatDate(time)}</div>
                     </div>
                     
                     {/* Center-Right - User Card */}
