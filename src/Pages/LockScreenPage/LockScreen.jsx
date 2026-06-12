@@ -64,7 +64,7 @@ export default function LockScreen() {
                         <div className="flex flex-col items-center gap-6 ml-2 relative">
                             
                             {/* User Card Container */}
-                            <div className={`bg-white p-6 shadow-lg w-44 transition-all duration-500 ${isUnlocking ? 'opacity-0 scale-95' : ''}`}>
+                            <div className={`bg-white p-6 shadow-lg w-55 transition-all duration-500 ${isUnlocking ? 'opacity-0 scale-95' : ''}`}>
                                 
                                 {/* User Avatar */}
                                 <div className="mb-4 h-40 flex items-center justify-center">
@@ -77,7 +77,7 @@ export default function LockScreen() {
                                 {/* Password Input */}
                             <input 
                                 type="password" 
-                                placeholder="Password"
+                                placeholder="Just type anything..."
                                 className="w-full border border-gray-800 px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                                 onKeyDown={handleUnlock}
                             />
