@@ -5,7 +5,7 @@ export default function LandingPage() {
 
   return (
     <div className="landing-page">
-      <h1>Welcome to Yoshiem's Portfolio</h1>
+      <h1 className="text-white">Welcome to Yoshiem's Portfolio</h1>
       <button onClick={() => navigate('/lockscreen')}>Back</button>
     </div>
   )

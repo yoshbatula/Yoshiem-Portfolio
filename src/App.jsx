@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoadingPage from './Pages/Loading-page/Loading-page'
 import LockScreen from './Pages/LockScreenPage/LockScreen'
-import LandingPage from './Pages/Landing-page/Landing-page'
+import Desktop from './Pages/Desktop-page/Desktop-page'
 import './App.css'
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LoadingPage />} />
         <Route path="/lockscreen" element={<LockScreen />} />
-        <Route path="/landingpage" element={<LandingPage />} />
+        <Route path="/desktop" element={<Desktop />} />
       </Routes>
     </Router>
   )

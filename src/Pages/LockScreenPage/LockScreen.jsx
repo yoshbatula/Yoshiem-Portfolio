@@ -1,7 +1,9 @@
 import LockScreenNav from '../components/LockScreenNav'
 import LockScreenBg from '../../assets/LockScreenBG.png'
 import UserAvatar from '../../assets/UserAvatar.svg'
+import { useNavigate } from 'react-router-dom'
 export default function LockScreen() {
+    const navigate = useNavigate()
     return (
         <>
             <LockScreenNav />
@@ -44,11 +46,12 @@ export default function LockScreen() {
                                 <div className="text-center font-semibold text-lg mb-4">YOSHIEM</div>
                                 
                                 {/* Password Input */}
-                                <input 
-                                    type="password" 
-                                    placeholder="Password"
-                                    className="w-full border border-gray-800 px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                                />
+                            <input 
+                                type="password" 
+                                placeholder="Password"
+                                className="w-full border border-gray-800 px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                onKeyDown={(e) => e.key === 'Enter' && navigate('/desktop')}
+                            />
                             </div>
                             
                             {/* Help Text */}
