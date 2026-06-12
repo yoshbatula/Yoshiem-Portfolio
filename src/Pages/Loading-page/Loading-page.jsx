@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ArchLinuxLogo from '../../assets/ArchLinuxLogo.svg'
 import './LoadingPage.css'
 
@@ -43,6 +44,7 @@ const BOOT_MESSAGES = [
 const SPLASH_DURATION = 2200
 
 export default function LoadingPage() {
+  const navigate = useNavigate()
   const [phase, setPhase] = useState('splash')        
   const [splashFading, setSplashFading] = useState(false)
   const [visibleMessages, setVisibleMessages] = useState([])
@@ -86,6 +88,16 @@ export default function LoadingPage() {
       logRef.current.scrollTop = logRef.current.scrollHeight
     }
   }, [visibleMessages])
+
+  // Redirect to lock screen when boot is complete
+  useEffect(() => {
+    if (complete) {
+      const redirectTimer = setTimeout(() => {
+        navigate('/lockscreen')
+      }, 1000)
+      return () => clearTimeout(redirectTimer)
+    }
+  }, [complete, navigate])
 
   // Splash screen
   if (phase === 'splash') {
