@@ -9,7 +9,8 @@ export default function BottomNav({
   windows = {},
   activeWindowId = null,
   onToggleWindow = () => {},
-  onOpenStartMenu = () => {}
+  onOpenStartMenu = () => {},
+  isStartMenuOpen = false
 }) {
   const [time, setTime] = useState(new Date())
 
@@ -46,10 +47,13 @@ export default function BottomNav({
         {/* Plasma launcher button */}
         <button 
           onClick={onOpenStartMenu}
-          className="p-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+          className="p-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer relative border border-transparent"
           title="Application Menu"
         >
           <img src={KDEPLASMAICON} alt="KDE Plasma Icon" className="w-8 h-8" />
+          {isStartMenuOpen && (
+            <div className="absolute top-0 left-[5%] right-[5%] h-[2.5px] bg-[#3daee9] rounded-b" />
+          )}
         </button>
 
         {/* Settings shortcut */}
@@ -92,7 +96,7 @@ export default function BottomNav({
             <button
               key={win.id}
               onClick={() => onToggleWindow(win.id)}
-              className={`flex items-center gap-2 px-3 h-9 rounded transition-all max-w-[160px] text-xs font-medium cursor-pointer border ${
+              className={`flex items-center gap-2 px-3 h-9 rounded transition-all max-w-[160px] text-xs font-medium cursor-pointer border relative ${
                 isActive 
                   ? 'bg-[#3daee9]/20 border-[#3daee9] text-white' 
                   : isMinimized
@@ -108,12 +112,11 @@ export default function BottomNav({
                 />
               )}
               <span className="truncate">{win.title}</span>
-              {/* Active indicator dot */}
-              <div 
-                className={`w-1.5 h-1.5 rounded-full mt-0.5 shrink-0 ${
-                  isActive ? 'bg-[#3daee9]' : isMinimized ? 'bg-gray-600' : 'bg-green-500'
-                }`} 
-              />
+              
+              {/* Active indicator line (matching the start menu launcher) */}
+              {isActive && (
+                <div className="absolute top-0 left-[20%] right-[20%] h-[2.5px] bg-[#3daee9] rounded-b" />
+              )}
             </button>
           )
         })}

@@ -18,18 +18,19 @@ export default function Window({
   defaultHeight = 460,
   defaultX = 120,
   defaultY = 80,
+  centerTitle = false,
+  hideIcon = false,
 }) {
   const [position, setPosition] = useState({ x: defaultX, y: defaultY })
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight })
   const windowRef = useRef(null)
 
-  // Align window position on load or if it gets off screen
+  // Center window on load
   useEffect(() => {
-    // Ensure window isn't completely off screen on mount
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
-    const x = Math.max(20, Math.min(defaultX, screenWidth - 100))
-    const y = Math.max(20, Math.min(defaultY, screenHeight - 100))
+    const x = Math.max(20, (screenWidth - defaultWidth) / 2)
+    const y = Math.max(20, (screenHeight - defaultHeight - 70) / 2)
     setPosition({ x, y })
   }, [])
 
@@ -131,27 +132,33 @@ export default function Window({
       style={windowStyle}
       onClick={onFocus}
       className={`flex flex-col bg-[#242729]/95 backdrop-blur-md rounded-lg overflow-hidden border border-[#3e4446] shadow-2xl transition-shadow duration-200 select-none ${
-        isActive ? 'border-[#3daee9] shadow-[0_0_15px_rgba(61,174,233,0.25)]' : 'opacity-90'
+        isActive ? '' : 'opacity-90'
       }`}
     >
       {/* Title Bar */}
       <div
         onMouseDown={handleMouseDown}
         onDoubleClick={handleTitleDoubleClick}
-        className={`flex items-center justify-between h-9 px-3 cursor-move border-b border-[#3e4446] ${
+        className={`relative flex items-center h-9 px-3 cursor-move border-b border-[#3e4446] ${
           isActive ? 'bg-[#1b1e20]' : 'bg-[#212426]'
         }`}
       >
-        {/* Title & Icon */}
-        <div className="flex items-center gap-2">
-          {icon && <img src={icon} alt="" className="w-4.5 h-4.5 object-contain" />}
-          <span className="text-sm font-medium text-[#eff0f1] tracking-wide truncate max-w-[250px]">
+        {/* Title — left or centered */}
+        {centerTitle ? (
+          <span className="absolute inset-x-0 text-center text-sm font-medium text-[#eff0f1] tracking-wide truncate pointer-events-none">
             {title}
           </span>
-        </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            {!hideIcon && icon && <img src={icon} alt="" className="w-4.5 h-4.5 object-contain" />}
+            <span className="text-sm font-medium text-[#eff0f1] tracking-wide truncate max-w-[250px]">
+              {title}
+            </span>
+          </div>
+        )}
 
-        {/* Window Controls */}
-        <div className="flex items-center gap-1.5">
+        {/* Window Controls — always right-aligned */}
+        <div className="ml-auto flex items-center gap-1.5 relative z-10">
           {/* Minimize */}
           <button
             onClick={onMinimize}

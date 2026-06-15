@@ -143,10 +143,10 @@ export default function Desktop() {
       <div className="absolute inset-0 z-10 flex flex-col p-6 pointer-events-none">
         
         {/* Welcome Text Overlay (Slightly faded behind windows) */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none opacity-40">
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none opacity-95">
           <div className="transform translate-y-[-10%] flex flex-col items-center">
-            <h1 className="text-white text-[32px] md:text-[41px] font-bold">WELCOME TO MY</h1>
-            <h1 className="text-white text-[64px] md:text-[80px]  mt-2 tracking-widest font-display">PORTFOLIO</h1>
+            <h1 className="text-white text-[32px] md:text-[41px] font-light tracking-widest">WELCOME TO MY</h1>
+            <h1 className="text-white text-[64px] md:text-[80px] font-light mt-2 tracking-widest font-display">PORTFOLIO</h1>
           </div>
         </div>
 
@@ -157,7 +157,7 @@ export default function Desktop() {
           <div className="absolute top-[5%] left-[3%] pointer-events-auto">
             <button 
               onClick={() => openWindow('resume')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-blue-500/15 border border-transparent hover:border-blue-500/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
             >
               <img src={FileIcon} alt="Resume" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
               <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Resume.pdf</span>
@@ -168,7 +168,7 @@ export default function Desktop() {
           <div className="absolute top-[28%] left-[3%] pointer-events-auto">
             <button 
               onClick={() => openWindow('about')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-blue-500/15 border border-transparent hover:border-blue-500/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
             >
               <img src={FolderIcon} alt="About Me" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
               <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">About me</span>
@@ -179,7 +179,7 @@ export default function Desktop() {
           <div className="absolute top-[5%] right-[3%] pointer-events-auto">
             <button 
               onClick={() => openWindow('project1')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-blue-500/15 border border-transparent hover:border-blue-500/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
             >
               <img src={FolderIcon} alt="Project 01" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
               <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Project 01</span>
@@ -190,7 +190,7 @@ export default function Desktop() {
           <div className="absolute top-[28%] right-[3%] pointer-events-auto">
             <button 
               onClick={() => openWindow('project2')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-blue-500/15 border border-transparent hover:border-blue-500/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
             >
               <img src={FolderIcon} alt="Project 02" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
               <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Project 02</span>
@@ -201,7 +201,7 @@ export default function Desktop() {
           <div className="absolute top-[51%] right-[3%] pointer-events-auto">
             <button 
               onClick={() => openWindow('project3')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-blue-500/15 border border-transparent hover:border-blue-500/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
             >
               <img src={FolderIcon} alt="Project 03" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
               <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Project 03</span>
@@ -224,6 +224,8 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('about')}
             onMaximize={() => toggleMaximizeWindow('about')}
             onFocus={() => focusWindow('about')}
+            centerTitle
+            hideIcon
           >
             <AboutMe />
           </Window>
@@ -323,6 +325,7 @@ export default function Desktop() {
           activeWindowId={activeWindowId}
           onToggleWindow={handleToggleWindow}
           onOpenStartMenu={() => setStartMenuOpen(!isStartMenuOpen)}
+          isStartMenuOpen={isStartMenuOpen}
         />
       </div>
     </div>

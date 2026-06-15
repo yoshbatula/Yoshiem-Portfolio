@@ -86,7 +86,7 @@ export default function StartMenu({
     { id: 'project3', title: 'Project 03', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Development'] },
     { id: 'resume', title: 'Resume.pdf', type: 'file', icon: FileIcon, categories: ['All Applications'] },
     { id: 'project1', title: 'Project 01', type: 'discover', icon: DiscoverIcon, categories: ['All Applications'] },
-    { id: 'about', title: 'Certifications', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Education'] },
+    { id: 'about', title: 'About me', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Education'] },
     { id: 'lifedump', title: 'Lifedump Journal', type: 'folder', icon: FolderIcon, categories: ['Contact'] },
     { id: 'settings', title: 'System Settings', type: 'folder', icon: FolderIcon, categories: ['Contact'] }
   ]
@@ -123,7 +123,7 @@ export default function StartMenu({
   return (
     <div 
       ref={menuRef}
-      className="absolute bottom-20 left-6 w-[580px] h-[530px] bg-[#212326]/95 backdrop-blur-md border border-[#2d3034] rounded-lg shadow-2xl flex flex-col overflow-hidden z-[999] select-none text-[#eff0f1] font-mono"
+      className="absolute bottom-[72px] left-6 w-[580px] h-[530px] bg-[#212326]/95 backdrop-blur-md border border-[#2d3034] rounded-lg shadow-2xl flex flex-col overflow-hidden z-[999] select-none text-[#eff0f1] font-mono"
     >
       {/* Header Area */}
       <div className="h-16 px-5 flex items-center justify-between border-b border-[#2d3034] shrink-0">

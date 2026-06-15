@@ -1,100 +1,172 @@
-import UserAvatar from '../../../assets/UserAvatar.svg'
+import heroImg from '../../../assets/hero.png'
 
+// ─── Skill dot-bar component ────────────────────────────────────────────────
+function DotBar({ filled = 0, total = 5 }) {
+  return (
+    <div className="flex gap-[3px] mt-1.5">
+      {Array.from({ length: total }).map((_, i) => (
+        <div
+          key={i}
+          className={`h-[5px] w-5 rounded-sm transition-colors duration-200 ${
+            i < filled ? 'bg-[#3daee9]' : 'bg-[#4a5568]'
+          }`}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ─── Skill card ─────────────────────────────────────────────────────────────
+function SkillCard({ category, name, filled, total = 5 }) {
+  return (
+    <div className="bg-[#2a2f32] border border-[#3e4446] rounded p-3 hover:border-[#3daee9]/40 transition-colors duration-200">
+      <p className="text-[9px] tracking-[0.12em] text-[#7b8f9a] uppercase font-medium">{category}</p>
+      <p className="text-[13px] text-[#eff0f1] font-semibold mt-0.5">{name}</p>
+      <DotBar filled={filled} total={total} />
+    </div>
+  )
+}
+
+// ─── Sidebar nav item ────────────────────────────────────────────────────────
+function NavItem({ icon, label, active = false }) {
+  return (
+    <div
+      className={`flex items-center gap-2 px-3 py-2 rounded text-xs cursor-pointer transition-colors duration-150 select-none ${
+        active
+          ? 'bg-[#3daee9]/20 text-[#3daee9] font-semibold'
+          : 'text-[#a0adb5] hover:bg-[#3e4446]/50 hover:text-[#eff0f1]'
+      }`}
+    >
+      {icon}
+      <span className="truncate">{label}</span>
+    </div>
+  )
+}
+
+// ─── Main component ──────────────────────────────────────────────────────────
 export default function AboutMe() {
   const skills = [
-    { name: 'React / Next.js', level: 90, category: 'Frontend' },
-    { name: 'JavaScript / TypeScript', level: 85, category: 'Frontend' },
-    { name: 'Tailwind CSS / Vanilla CSS', level: 95, category: 'Frontend' },
-    { name: 'Node.js / Express', level: 80, category: 'Backend' },
-    { name: 'PostgreSQL / MongoDB', level: 75, category: 'Backend' },
-    { name: 'Arch Linux / Bash scripting', level: 85, category: 'DevOps' },
-    { name: 'Docker / Git / CI-CD', level: 80, category: 'DevOps' },
+    { category: 'LIBRARY',    name: 'React',          filled: 4 },
+    { category: 'FRAMEWORK',  name: 'Laravel',        filled: 3 },
+    { category: 'LANGUAGE',   name: 'Python',         filled: 3 },
+    { category: 'TOOLS',      name: 'Git / Linux',    filled: 4 },
+    { category: 'TOOLS',      name: 'Blender',        filled: 2 },
+    { category: 'LANGUAGE',   name: 'JavaScript',     filled: 4 },
   ]
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-8 text-[#eff0f1]">
-      {/* Header Profile */}
-      <div className="flex flex-col md:flex-row items-center gap-6 border-b border-[#3e4446] pb-6">
-        <div className="w-28 h-28 rounded-full bg-[#1b1e20] border-2 border-[#3daee9] p-2 flex items-center justify-center shadow-lg">
-          <img src={UserAvatar} alt="Yoshiem Avatar" className="w-full h-full object-contain" />
-        </div>
-        <div className="text-center md:text-left space-y-2">
-          <h2 className="text-2xl font-bold text-white tracking-wide">Yoshiem Batula</h2>
-          <p className="text-[#3daee9] font-medium">Full-Stack Developer &amp; Linux Enthusiast</p>
-          <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-1.5 text-xs text-[#a5a6a7]">
-            <span className="bg-[#212426] px-2.5 py-1 rounded border border-[#3e4446]">📍 Manila, Philippines</span>
-            <span className="bg-[#212426] px-2.5 py-1 rounded border border-[#3e4446]">💻 yoshiem.dev</span>
-            <span className="bg-[#212426] px-2.5 py-1 rounded border border-[#3e4446]">✉️ contact@yoshiem.dev</span>
+    <div className="flex h-full text-[#eff0f1] font-mono text-xs bg-[#31363b]">
+
+      {/* ── Sidebar ─────────────────────────────────────── */}
+      <aside className="w-[160px] shrink-0 bg-[#272b2d] border-r border-[#3e4446] flex flex-col py-3 px-2 gap-0.5">
+        {/* Places heading */}
+        <p className="text-[9px] tracking-[0.14em] text-[#596b75] uppercase font-bold px-3 mb-1.5">Places</p>
+
+        <NavItem
+          label="About me"
+          active
+          icon={
+            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          }
+        />
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Version tag */}
+        <p className="text-[9px] text-[#3e5060] px-3 mt-2">v1.0 · 2025</p>
+      </aside>
+
+      {/* ── Main content ────────────────────────────────── */}
+      <main className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3e4446] scrollbar-track-transparent">
+
+        {/* ── Profile row ─────────────────────────────── */}
+        <div className="flex gap-5 p-5 border-b border-[#3e4446]">
+
+          {/* Avatar */}
+          <div className="relative shrink-0">
+            <img
+              src={heroImg}
+              alt="Yosh Batula"
+              className="w-[110px] h-[110px] object-cover rounded border border-[#3e4446]"
+            />
+            {/* Online badge */}
+            <span className="absolute bottom-2 right-0 translate-x-1/4 bg-[#27ae60] text-white text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm">
+              ONLINE
+            </span>
           </div>
-        </div>
-      </div>
 
-      {/* Bio Section */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-bold text-white border-l-3 border-[#3daee9] pl-3">Biography</h3>
-        <p className="leading-relaxed text-sm text-[#eff0f1]/90">
-          Hello! I'm Yoshiem, a software engineer with a deep passion for writing clean, optimized code and crafting beautiful web applications. 
-          I love operating systems, particularly Arch Linux and customizing KDE Plasma desktops, which inspired this portfolio. 
-          My development philosophy focuses on performance, pixel-perfect UI execution, and user experience.
-        </p>
-      </div>
-
-      {/* Skills Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold text-white border-l-3 border-[#3daee9] pl-3">Technical Skills</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {skills.map((skill, index) => (
-            <div key={index} className="bg-[#212426] p-3.5 rounded border border-[#3e4446] space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="font-semibold text-white">{skill.name}</span>
-                <span className="text-[#3daee9]">{skill.level}%</span>
-              </div>
-              <div className="w-full bg-[#1b1e20] h-2 rounded-full overflow-hidden">
-                <div 
-                  className="bg-[#3daee9] h-full rounded-full transition-all duration-1000 ease-out" 
-                  style={{ width: `${skill.level}%` }}
-                />
-              </div>
-              <span className="inline-block text-[10px] text-[#a5a6a7] bg-[#31363b] px-2 py-0.5 rounded border border-[#3e4446]">
-                {skill.category}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Work Experience Timeline */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold text-white border-l-3 border-[#3daee9] pl-3">Experience</h3>
-        <div className="space-y-6 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-[1px] before:bg-[#3e4446]">
-          
-          {/* Job 1 */}
-          <div className="relative pl-8 space-y-1 group">
-            <div className="absolute left-2 top-1.5 w-3 h-3 rounded-full bg-[#3daee9] border border-[#242729] group-hover:scale-125 transition-transform" />
-            <div className="flex flex-wrap items-center justify-between text-sm">
-              <h4 className="font-bold text-white">Full Stack Software Engineer</h4>
-              <span className="text-xs text-[#a5a6a7] bg-[#212426] px-2 py-0.5 rounded border border-[#3e4446]">2024 - Present</span>
-            </div>
-            <p className="text-xs text-[#3daee9] font-medium">Tech Solutions Inc.</p>
-            <p className="text-xs text-[#eff0f1]/80 leading-relaxed pt-1">
-              Developed and maintained key microservices using Node.js and React. Boosted system performance by 30% by optimizing database queries and caching strategies in Redis. Collaborated with designers to deliver responsive, user-friendly UI dashboards.
+          {/* Info */}
+          <div className="flex flex-col justify-center gap-1.5 min-w-0">
+            <h2 className="text-[22px] font-bold text-[#eff0f1] tracking-wide leading-none">Yosh Batula</h2>
+            <p className="text-[11px] text-[#7b8f9a]">
+              @yoshbatula &nbsp;·&nbsp; BS Computer Science &nbsp;·&nbsp; University of Mindanao
             </p>
-          </div>
-
-          {/* Job 2 */}
-          <div className="relative pl-8 space-y-1 group">
-            <div className="absolute left-2 top-1.5 w-3 h-3 rounded-full bg-[#3e4446] border border-[#242729] group-hover:bg-[#3daee9] group-hover:scale-125 transition-all" />
-            <div className="flex flex-wrap items-center justify-between text-sm">
-              <h4 className="font-bold text-white">Junior Front-End Developer</h4>
-              <span className="text-xs text-[#a5a6a7] bg-[#212426] px-2 py-0.5 rounded border border-[#3e4446]">2022 - 2024</span>
-            </div>
-            <p className="text-xs text-[#3daee9] font-medium">Creative Web Studio</p>
-            <p className="text-xs text-[#eff0f1]/80 leading-relaxed pt-1">
-              Designed custom websites for clients using Vue.js and Tailwind CSS. Built interactive features, form validations, and integrated REST APIs. Ensured SEO-optimized structures and cross-browser responsiveness.
+            <p className="text-[11px] text-[#c5cdd3] leading-relaxed mt-0.5 max-w-[340px]">
+              Passionate about software development, machine learning, and cybersecurity.
+              Currently building ML-based network intrusion detection systems and expanding
+              through leadership in the tech community.
             </p>
           </div>
         </div>
-      </div>
+
+        {/* ── Stats row ───────────────────────────────── */}
+        <div className="flex gap-3 px-5 py-4 border-b border-[#3e4446]">
+          {/* Stat: years coding */}
+          <div className="bg-[#2a2f32] border border-[#3e4446] rounded p-4 flex flex-col justify-center min-w-[120px]">
+            <p className="text-[26px] font-bold text-[#eff0f1] leading-none">3+</p>
+            <p className="text-[10px] text-[#7b8f9a] mt-1">years coding</p>
+          </div>
+
+          {/* Stat: current project */}
+          <div className="bg-[#2a2f32] border border-[#3e4446] rounded p-4 flex flex-col justify-center hover:border-[#3daee9]/40 transition-colors cursor-pointer group">
+            <p className="text-[13px] font-bold text-[#eff0f1] tracking-wide leading-tight group-hover:text-[#3daee9] transition-colors">
+              3D MODEL<br/>PORTFOLIO
+            </p>
+            <p className="text-[10px] text-[#596b75] mt-1">current project</p>
+          </div>
+        </div>
+
+        {/* ── Skills / Tech Stack ─────────────────────── */}
+        <div className="px-5 pt-4 pb-2">
+          <p className="text-[10px] tracking-[0.18em] text-[#596b75] uppercase font-bold mb-3">
+            Skills / Tech Stack
+          </p>
+
+          <div className="grid grid-cols-3 gap-2">
+            {skills.map((s, i) => (
+              <SkillCard key={i} {...s} />
+            ))}
+          </div>
+        </div>
+
+        {/* ── Education ───────────────────────────────── */}
+        <div className="px-5 pt-4 pb-5">
+          <p className="text-[10px] tracking-[0.18em] text-[#596b75] uppercase font-bold mb-3">
+            Education
+          </p>
+
+          <div className="flex gap-5 items-start">
+            {/* Date range */}
+            <div className="text-[11px] text-[#7b8f9a] shrink-0 leading-relaxed pt-0.5">
+              2026 →<br/>present
+            </div>
+
+            {/* Detail */}
+            <div className="border-l border-[#3e4446] pl-4">
+              <p className="text-[13px] font-semibold text-[#eff0f1]">BS Computer Science</p>
+              <p className="text-[11px] text-[#eff0f1]/80 mt-0.5">
+                University of Mindanao &nbsp;·&nbsp; Davao City
+              </p>
+              <p className="text-[10px] text-[#596b75] mt-1">Focus: Web Development</p>
+            </div>
+          </div>
+        </div>
+
+      </main>
     </div>
   )
 }
