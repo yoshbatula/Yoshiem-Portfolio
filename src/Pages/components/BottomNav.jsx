@@ -14,6 +14,7 @@ export default function BottomNav() {
         return () => clearInterval(timer)
     }, [])
 
+    // Format time to 12-hour format with AM/PM
     const formatTime = (date) => {
         let hours = date.getHours()
         const minutes = date.getMinutes().toString().padStart(2, '0')
@@ -22,6 +23,7 @@ export default function BottomNav() {
         return `${hours}:${minutes} ${ampm}`
     }
 
+    // Format date to MM/DD/YYYY
     const formatDate = (date) => {
         const month = date.getMonth() + 1
         const day = date.getDate()
