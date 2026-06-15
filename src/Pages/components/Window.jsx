@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
+import MinimizeIcon from '../../assets/Minimize.svg'
+import MaximizeIcon from '../../assets/Maximaze.svg'
+import ExitIcon from '../../assets/Exit.svg'
 
 export default function Window({
   id,
@@ -131,7 +134,7 @@ export default function Window({
       ref={windowRef}
       style={windowStyle}
       onClick={onFocus}
-      className={`flex flex-col bg-[#242729]/95 backdrop-blur-md rounded-lg overflow-hidden border border-[#3e4446] shadow-2xl transition-shadow duration-200 select-none ${
+      className={`pointer-events-auto flex flex-col bg-[#242729]/95 backdrop-blur-md rounded-lg overflow-hidden border border-[#3e4446] shadow-2xl transition-shadow duration-200 select-none ${
         isActive ? '' : 'opacity-90'
       }`}
     >
@@ -162,41 +165,28 @@ export default function Window({
           {/* Minimize */}
           <button
             onClick={onMinimize}
-            className="window-control-btn w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors group"
+            className="window-control-btn w-6 h-6 flex items-center justify-center transition-opacity hover:opacity-70 cursor-pointer"
             title="Minimize"
           >
-            <div className="w-2.5 h-[1.5px] bg-[#a5a6a7] group-hover:bg-[#fdbc40] transition-colors" />
+            <img src={MinimizeIcon} alt="Minimize" className="w-4 h-4 object-contain" />
           </button>
 
           {/* Maximize */}
           <button
             onClick={onMaximize}
-            className="window-control-btn w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors group"
+            className="window-control-btn w-6 h-6 flex items-center justify-center transition-opacity hover:opacity-70 cursor-pointer"
             title={isMaximized ? 'Restore' : 'Maximize'}
           >
-            {isMaximized ? (
-              <div className="w-2.5 h-2.5 border-[1.5px] border-[#a5a6a7] group-hover:border-[#2ecc71] transition-colors relative">
-                <div className="absolute top-[2px] left-[2px] w-1 h-1 border-[1px] border-[#a5a6a7] group-hover:border-[#2ecc71]" />
-              </div>
-            ) : (
-              <div className="w-2.5 h-2.5 border-[1.5px] border-[#a5a6a7] group-hover:border-[#2ecc71] transition-colors rounded-[1px]" />
-            )}
+            <img src={MaximizeIcon} alt="Maximize" className="w-4 h-4 object-contain" />
           </button>
 
           {/* Close */}
           <button
             onClick={onClose}
-            className="window-control-btn w-6 h-6 rounded-full hover:bg-[#da4453] flex items-center justify-center transition-colors group"
+            className="window-control-btn w-6 h-6 flex items-center justify-center transition-opacity hover:opacity-70 cursor-pointer"
             title="Close"
           >
-            <svg
-              className="w-2.5 h-2.5 text-[#a5a6a7] group-hover:text-white transition-colors"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <img src={ExitIcon} alt="Close" className="w-4 h-4 object-contain" />
           </button>
         </div>
       </div>

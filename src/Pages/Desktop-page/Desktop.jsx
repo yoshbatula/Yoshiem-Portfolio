@@ -214,7 +214,7 @@ export default function Desktop() {
 
       {/* Render Draggable Windows Manager */}
       <div className="absolute inset-0 z-20 pointer-events-none">
-        <div className="w-full h-full relative pointer-events-auto">
+        <div className="w-full h-full relative pointer-events-none">
           
           {/* About Me Window */}
           <Window

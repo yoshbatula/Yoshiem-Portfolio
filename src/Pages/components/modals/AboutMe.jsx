@@ -1,5 +1,4 @@
-import heroImg from '../../../assets/hero.png'
-
+import heroImg from '../../../assets/Profile.svg'
 // ─── Skill dot-bar component ────────────────────────────────────────────────
 function DotBar({ filled = 0, total = 5 }) {
   return (
@@ -87,14 +86,14 @@ export default function AboutMe() {
         <div className="flex gap-5 p-5 border-b border-[#3e4446]">
 
           {/* Avatar */}
-          <div className="relative shrink-0">
+          <div className="relative shrink-0 w-[110px] h-[110px]">
             <img
               src={heroImg}
               alt="Yosh Batula"
-              className="w-[110px] h-[110px] object-cover rounded border border-[#3e4446]"
+              className="w-full h-full object-cover rounded border border-[#3e4446]"
             />
             {/* Online badge */}
-            <span className="absolute bottom-2 right-0 translate-x-1/4 bg-[#27ae60] text-white text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm">
+            <span className="absolute -bottom-2 right-0 bg-[#27ae60] text-white text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm">
               ONLINE
             </span>
           </div>
@@ -106,9 +105,7 @@ export default function AboutMe() {
               @yoshbatula &nbsp;·&nbsp; BS Computer Science &nbsp;·&nbsp; University of Mindanao
             </p>
             <p className="text-[11px] text-[#c5cdd3] leading-relaxed mt-0.5 max-w-[340px]">
-              Passionate about software development, machine learning, and cybersecurity.
-              Currently building ML-based network intrusion detection systems and expanding
-              through leadership in the tech community.
+              Passionate about software development, web development, and 3D design using Blender. Continuously building projects that enhance my programming, problem-solving, and creative skills while exploring new technologies and contributing to the tech community.
             </p>
           </div>
         </div>

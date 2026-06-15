@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import FileIcon from '../../assets/FileIcon.svg'
 import FolderIcon from '../../assets/FolderIcon.svg'
 import UserAvatar from '../../assets/UserAvatar.svg'
-
+import Lifedump from '../../assets/Lifedump.svg'
 export default function StartMenu({
   isOpen,
   onClose,
@@ -67,17 +67,6 @@ export default function StartMenu({
     }
   ]
 
-  // Inline Custom Discover App Store Icon (blue bag)
-  const DiscoverIcon = (
-    <svg className="w-12 h-12 shrink-0 drop-shadow-md" viewBox="0 0 64 64" fill="none">
-      <rect x="14" y="22" width="36" height="34" rx="6" fill="#3daee9" />
-      <path d="M24 22V16C24 11.58 27.58 8 32 8C36.42 8 40 11.58 40 16V22" stroke="#3daee9" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="32" cy="38" r="8" fill="white" fillOpacity="0.25" />
-      <circle cx="32" cy="38" r="3" fill="white" />
-      <circle cx="41" cy="31" r="2" fill="white" />
-      <circle cx="23" cy="45" r="2" fill="white" />
-    </svg>
-  )
 
   // Applications list with their specific categories
   const appList = [
@@ -85,9 +74,8 @@ export default function StartMenu({
     { id: 'project2', title: 'Project 02', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Development'] },
     { id: 'project3', title: 'Project 03', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Development'] },
     { id: 'resume', title: 'Resume.pdf', type: 'file', icon: FileIcon, categories: ['All Applications'] },
-    { id: 'project1', title: 'Project 01', type: 'discover', icon: DiscoverIcon, categories: ['All Applications'] },
+    { id: 'lifedump', title: 'Lifedump', type: 'folder', icon: Lifedump, categories: ['All Applications'] },
     { id: 'about', title: 'About me', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Education'] },
-    { id: 'lifedump', title: 'Lifedump Journal', type: 'folder', icon: FolderIcon, categories: ['Contact'] },
     { id: 'settings', title: 'System Settings', type: 'folder', icon: FolderIcon, categories: ['Contact'] }
   ]
 
@@ -186,7 +174,7 @@ export default function StartMenu({
                 <button
                   key={`${app.id}-${index}`}
                   onClick={() => handleAppClick(app.id)}
-                  className="flex flex-col items-center gap-2 p-2 rounded-lg hover:bg-white/5 active:bg-white/10 transition-colors w-24 text-center cursor-pointer group"
+                  className="flex flex-col items-center gap-2 p-2.5 rounded-lg border border-transparent hover:bg-[#253C48] hover:border-[#3daee9]/30 hover:scale-[1.02] active:scale-[0.98] transition-all w-24 text-center cursor-pointer group"
                 >
                   {app.type === 'discover' ? (
                     app.icon
