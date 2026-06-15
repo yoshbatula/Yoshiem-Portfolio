@@ -38,7 +38,6 @@ export default function Window({
   }, [])
 
   if (!isOpen) return null
-  if (isMinimized) return null
 
   // Handle Dragging
   const handleMouseDown = (e) => {
@@ -135,6 +134,8 @@ export default function Window({
       style={windowStyle}
       onClick={onFocus}
       className={`pointer-events-auto flex flex-col bg-[#242729]/95 backdrop-blur-md rounded-lg overflow-hidden border border-[#3e4446] shadow-2xl transition-shadow duration-200 select-none ${
+        isMinimized ? 'hidden' : ''
+      } ${
         isActive ? '' : 'opacity-90'
       }`}
     >
@@ -161,7 +162,11 @@ export default function Window({
         )}
 
         {/* Window Controls — always right-aligned */}
-        <div className="ml-auto flex items-center gap-1.5 relative z-10">
+        <div
+          className="ml-auto flex items-center gap-1.5 relative z-10"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Minimize */}
           <button
             onClick={onMinimize}
