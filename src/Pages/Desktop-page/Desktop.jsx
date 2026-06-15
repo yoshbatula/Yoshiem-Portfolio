@@ -42,7 +42,7 @@ export default function Desktop() {
               <div className="absolute inset-0 flex flex-col items-start top-[10%] left-[90%] mt-3">
                   <button className="flex flex-col items-center hover:cursor-pointer hover:bg-blue-500/20 w-25 hover:rounded-md leading-tight">
                       <img src={FolderIcon} alt="Project 01" className="w-16 h-16" />
-                      <span className="text-white text-sm mt-2 text-center max-w-[80px] leading-tight">Project 01 (UMERCH)</span>
+                      <span className="text-white text-sm mt-2 text-center max-w-[80px] leading-tight">Project 01</span>
                   </button>
               </div>
 
@@ -50,7 +50,7 @@ export default function Desktop() {
               <div className="absolute inset-0 flex flex-col items-start top-[30%] left-[83%] mt-3">
                   <button className="flex flex-col items-center hover:cursor-pointer hover:bg-blue-500/20 w-25 hover:rounded-md leading-tight">
                       <img src={FolderIcon} alt="Project 01" className="w-16 h-16" />
-                      <span className="text-white text-sm mt-2 text-center max-w-[80px] leading-tight">Project 02 (WEBSITE DON MACHIATOS KIOSK)</span>
+                      <span className="text-white text-sm mt-2 text-center max-w-[80px] leading-tight">Project 02</span>
                   </button>
               </div>
 
@@ -58,7 +58,7 @@ export default function Desktop() {
               <div className="absolute inset-0 flex flex-col items-start top-[60%] left-[88%] mt-3">
                   <button className="flex flex-col items-center hover:cursor-pointer hover:bg-blue-500/20 w-25 hover:rounded-md leading-tight">
                       <img src={FolderIcon} alt="Project 01" className="w-16 h-16" />
-                      <span className="text-white text-sm mt-2 text-center max-w-[80px] leading-tight">Project 03 (HYBRID ENHANCE NIDS)</span>
+                      <span className="text-white text-sm mt-2 text-center max-w-[80px] leading-tight">Project 03</span>
                   </button>
               </div>
 
