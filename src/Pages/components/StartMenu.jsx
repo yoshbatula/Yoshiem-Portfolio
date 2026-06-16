@@ -4,11 +4,11 @@ import FileIcon from '../../assets/FileIcon.svg'
 import FolderIcon from '../../assets/FolderIcon.svg'
 import UserAvatar from '../../assets/UserAvatar.svg'
 import Lifedump from '../../assets/Lifedump.svg'
+import Settings from '../../assets/Settings.svg'
 export default function StartMenu({
   isOpen,
   onClose,
   onOpenWindow,
-  windows
 }) {
   const navigate = useNavigate()
   const menuRef = useRef(null)
@@ -76,7 +76,7 @@ export default function StartMenu({
     { id: 'resume', title: 'Resume.pdf', type: 'file', icon: FileIcon, categories: ['All Applications'] },
     { id: 'lifedump', title: 'Lifedump', type: 'folder', icon: Lifedump, categories: ['All Applications'] },
     { id: 'about', title: 'About me', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Education'] },
-    { id: 'settings', title: 'System Settings', type: 'folder', icon: FolderIcon, categories: ['Contact'] }
+    { id: 'settings', title: 'System Settings', type: 'folder', icon: Settings, categories: ['Contact', 'All Applications'] }
   ]
 
   // Filter apps by search term and active category tab
@@ -174,6 +174,11 @@ export default function StartMenu({
                 <button
                   key={`${app.id}-${index}`}
                   onClick={() => handleAppClick(app.id)}
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('application/x-app', JSON.stringify({ id: app.id, title: app.title }))
+                    e.dataTransfer.effectAllowed = 'copy'
+                  }}
                   className="flex flex-col items-center gap-2 p-2.5 rounded-lg border border-transparent hover:bg-[#253C48] hover:border-[#3daee9]/30 hover:scale-[1.02] active:scale-[0.98] transition-all w-24 text-center cursor-pointer group"
                 >
                   {app.type === 'discover' ? (

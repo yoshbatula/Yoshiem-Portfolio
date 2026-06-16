@@ -77,7 +77,7 @@ export default function BottomNav({
               ? 'bg-[#3daee9]/20 border border-[#3daee9]/40' 
               : 'hover:bg-white/10'
           }`}
-          title="Lifedump Journal"
+          title="Lifedump Photos"
         >
           <img src={LifedumpIcon} alt="Lifedump Icon" className="w-8 h-8" />
         </button>

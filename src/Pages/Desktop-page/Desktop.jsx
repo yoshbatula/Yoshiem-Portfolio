@@ -32,17 +32,50 @@ export default function Desktop() {
     project2: { id: 'project2', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 240, defaultY: 100, defaultWidth: 680, defaultHeight: 485 },
     project3: { id: 'project3', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 300, defaultY: 120, defaultWidth: 680, defaultHeight: 485 },
     settings: { id: 'settings', title: 'System Settings', icon: SettingsIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 140, defaultY: 50, defaultWidth: 720, defaultHeight: 520 },
-    lifedump: { id: 'lifedump', title: 'Lifedump Journal', icon: LifedumpIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 680, defaultHeight: 500 }
+    lifedump: { id: 'lifedump', title: 'Lifedump Photos', icon: LifedumpIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 800, defaultHeight: 520 }
   })
 
   const [maxZIndex, setMaxZIndex] = useState(10)
   const [activeWindowId, setActiveWindowId] = useState(null)
   const [isStartMenuOpen, setStartMenuOpen] = useState(false)
   
+  // Desktop shortcuts (drag from Start Menu)
+  const [desktopShortcuts, setDesktopShortcuts] = useState([
+    { id: 'resume', title: 'Resume.pdf', icon: FileIcon, x: 3, y: 5 },
+    { id: 'about', title: 'About me', icon: FolderIcon, x: 3, y: 28 },
+    { id: 'project1', title: 'Project 01', icon: FolderIcon, x: 3, y: 51 },
+    { id: 'project2', title: 'Project 02', icon: FolderIcon, x: 3, y: 74 },
+    { id: 'project3', title: 'Project 03', icon: FolderIcon, x: 85, y: 28 },
+  ])
+
+  const handleDropOnDesktop = (e) => {
+    e.preventDefault()
+    const raw = e.dataTransfer.getData('application/x-app')
+    if (!raw) return
+
+    const data = JSON.parse(raw)
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+
+    const iconMap = {
+      about: FolderIcon, resume: FileIcon, project1: FolderIcon,
+      project2: FolderIcon, project3: FolderIcon,
+    }
+
+    setDesktopShortcuts(prev => {
+      if (prev.find(s => s.id === data.id)) return prev
+      return [...prev, { id: data.id, title: data.title || data.id, icon: iconMap[data.id] || FolderIcon, x, y }]
+    })
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+  }
+
   // Wallpaper state
   const [wallpaperId, setWallpaperId] = useState('default')
-  // Theme state
-  const [systemTheme, setSystemTheme] = useState('dark')
+  const [customWallpaper, setCustomWallpaper] = useState(null)
 
   const focusWindow = (id) => {
     const nextZ = maxZIndex + 1
@@ -62,7 +95,7 @@ export default function Desktop() {
       ...prev,
       [id]: { ...prev[id], isOpen: true, isMinimized: false, zIndex: nextZ }
     }))
-    setStartMenuOpen(false) // Close launcher when app opens
+    setStartMenuOpen(false)
   }
 
   const closeWindow = (id) => {
@@ -115,17 +148,21 @@ export default function Desktop() {
     setWallpaperId(id)
   }
 
-  const handleToggleTheme = () => {
-    setSystemTheme(prev => prev === 'dark' ? 'light' : 'dark')
+  const handleUploadWallpaper = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    setCustomWallpaper(url)
+    setWallpaperId('custom')
   }
 
-  const currentWp = WALLPAPERS[wallpaperId] || WALLPAPERS.default
+  const currentWp = wallpaperId === 'custom' && customWallpaper
+    ? { type: 'image', value: customWallpaper }
+    : (WALLPAPERS[wallpaperId] || WALLPAPERS.default)
 
   return (
     <div 
-      className={`w-full h-screen relative overflow-hidden select-none transition-all duration-300 ${
-        systemTheme === 'light' ? 'light-theme' : ''
-      }`}
+      className={`w-full h-screen relative overflow-hidden select-none`}
       style={{
         background: currentWp.type === 'gradient' ? currentWp.value : 'initial',
       }}
@@ -150,64 +187,27 @@ export default function Desktop() {
           </div>
         </div>
 
-        {/* Desktop Shortcuts (Grid placements using pointer-events-auto) */}
-        <div className="flex-1 relative pointer-events-none">
-          
-          {/* Resume Icon */}
-          <div className="absolute top-[5%] left-[3%] pointer-events-auto">
-            <button 
-              onClick={() => openWindow('resume')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+        {/* Desktop Shortcuts — draggable, drop-to-create */}
+        <div
+          className="flex-1 relative pointer-events-none"
+          onDrop={handleDropOnDesktop}
+          onDragOver={handleDragOver}
+        >
+          {desktopShortcuts.map((shortcut) => (
+            <div
+              key={shortcut.id}
+              className="absolute pointer-events-auto"
+              style={{ top: `${shortcut.y}%`, left: `${shortcut.x}%` }}
             >
-              <img src={FileIcon} alt="Resume" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
-              <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Resume.pdf</span>
-            </button>
-          </div>
-
-          {/* About Me */}
-          <div className="absolute top-[28%] left-[3%] pointer-events-auto">
-            <button 
-              onClick={() => openWindow('about')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
-            >
-              <img src={FolderIcon} alt="About Me" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
-              <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">About me</span>
-            </button>
-          </div>
-
-          {/* Project 01 */}
-          <div className="absolute top-[5%] right-[3%] pointer-events-auto">
-            <button 
-              onClick={() => openWindow('project1')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
-            >
-              <img src={FolderIcon} alt="Project 01" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
-              <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Project 01</span>
-            </button>
-          </div>
-
-          {/* Project 02 */}
-          <div className="absolute top-[28%] right-[3%] pointer-events-auto">
-            <button 
-              onClick={() => openWindow('project2')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
-            >
-              <img src={FolderIcon} alt="Project 02" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
-              <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Project 02</span>
-            </button>
-          </div>
-
-          {/* Project 03 */}
-          <div className="absolute top-[51%] right-[3%] pointer-events-auto">
-            <button 
-              onClick={() => openWindow('project3')}
-              className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
-            >
-              <img src={FolderIcon} alt="Project 03" className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
-              <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">Project 03</span>
-            </button>
-          </div>
-
+              <button
+                onClick={() => openWindow(shortcut.id)}
+                className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              >
+                <img src={shortcut.icon} alt={shortcut.title} className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
+                <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">{shortcut.title}</span>
+              </button>
+            </div>
+          ))}
         </div>
 
       </div>
@@ -292,12 +292,13 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('settings')}
             onMaximize={() => toggleMaximizeWindow('settings')}
             onFocus={() => focusWindow('settings')}
+            centerTitle
+            hideIcon
           >
             <SettingsContent 
               currentWallpaper={wallpaperId}
               onSelectWallpaper={handleSelectWallpaper}
-              systemTheme={systemTheme}
-              onToggleTheme={handleToggleTheme}
+              onUploadWallpaper={handleUploadWallpaper}
             />
           </Window>
 
@@ -309,6 +310,8 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('lifedump')}
             onMaximize={() => toggleMaximizeWindow('lifedump')}
             onFocus={() => focusWindow('lifedump')}
+            centerTitle
+            hideIcon
           >
             <LifedumpContent />
           </Window>
@@ -321,7 +324,6 @@ export default function Desktop() {
         isOpen={isStartMenuOpen}
         onClose={() => setStartMenuOpen(false)}
         onOpenWindow={openWindow}
-        windows={windows}
       />
 
       {/* Bottom Navigation Taskbar */}
