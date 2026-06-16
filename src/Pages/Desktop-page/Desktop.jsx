@@ -28,9 +28,9 @@ export default function Desktop() {
   const [windows, setWindows] = useState({
     about: { id: 'about', title: 'About me', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 60, defaultY: 40, defaultWidth: 680, defaultHeight: 500 },
     resume: { id: 'resume', title: 'Resume.pdf', icon: FileIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 120, defaultY: 60, defaultWidth: 785, defaultHeight: 560 },
-    project1: { id: 'project1', title: 'Project 01: Arch Install Script', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 180, defaultY: 80, defaultWidth: 680, defaultHeight: 485 },
-    project2: { id: 'project2', title: 'Project 02: Plasma Configurator', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 240, defaultY: 100, defaultWidth: 680, defaultHeight: 485 },
-    project3: { id: 'project3', title: 'Project 03: This Portfolio OS', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 300, defaultY: 120, defaultWidth: 680, defaultHeight: 485 },
+    project1: { id: 'project1', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 180, defaultY: 80, defaultWidth: 680, defaultHeight: 485 },
+    project2: { id: 'project2', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 240, defaultY: 100, defaultWidth: 680, defaultHeight: 485 },
+    project3: { id: 'project3', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 300, defaultY: 120, defaultWidth: 680, defaultHeight: 485 },
     settings: { id: 'settings', title: 'System Settings', icon: SettingsIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 140, defaultY: 50, defaultWidth: 720, defaultHeight: 520 },
     lifedump: { id: 'lifedump', title: 'Lifedump Journal', icon: LifedumpIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 680, defaultHeight: 500 }
   })
@@ -250,6 +250,8 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('project1')}
             onMaximize={() => toggleMaximizeWindow('project1')}
             onFocus={() => focusWindow('project1')}
+            centerTitle
+            hideIcon
           >
             <ProjectContent projectId="project1" />
           </Window>
@@ -262,6 +264,8 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('project2')}
             onMaximize={() => toggleMaximizeWindow('project2')}
             onFocus={() => focusWindow('project2')}
+            centerTitle
+            hideIcon
           >
             <ProjectContent projectId="project2" />
           </Window>
@@ -274,6 +278,8 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('project3')}
             onMaximize={() => toggleMaximizeWindow('project3')}
             onFocus={() => focusWindow('project3')}
+            centerTitle
+            hideIcon
           >
             <ProjectContent projectId="project3" />
           </Window>

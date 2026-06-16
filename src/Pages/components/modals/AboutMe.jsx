@@ -76,7 +76,7 @@ export default function AboutMe() {
         <div className="flex-1" />
 
         {/* Version tag */}
-        <p className="text-[9px] text-[#3e5060] px-3 mt-2">v1.0 · 2025</p>
+        <p className="text-[9px] text-[#3e5060] px-3 mt-2">v1.0 · 2026</p>
       </aside>
 
       {/* Main content */}
