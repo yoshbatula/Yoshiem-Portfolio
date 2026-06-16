@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import MinimizeIcon from '../../assets/Minimize.svg'
 import MaximizeIcon from '../../assets/Maximaze.svg'
 import ExitIcon from '../../assets/Exit.svg'
 
 export default function Window({
-  id,
   title,
   icon,
   isOpen,
@@ -19,23 +18,21 @@ export default function Window({
   children,
   defaultWidth = 680,
   defaultHeight = 460,
-  defaultX = 120,
-  defaultY = 80,
   centerTitle = false,
   hideIcon = false,
 }) {
-  const [position, setPosition] = useState({ x: defaultX, y: defaultY })
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight })
+  const [isDragging, setIsDragging] = useState(false)
   const windowRef = useRef(null)
 
-  // Center window on load
-  useEffect(() => {
+  const [position, setPosition] = useState(() => {
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
-    const x = Math.max(20, (screenWidth - defaultWidth) / 2)
-    const y = Math.max(20, (screenHeight - defaultHeight - 70) / 2)
-    setPosition({ x, y })
-  }, [])
+    return {
+      x: Math.max(20, (screenWidth - defaultWidth) / 2),
+      y: Math.max(20, (screenHeight - defaultHeight - 70) / 2),
+    }
+  })
 
   if (!isOpen) return null
 
@@ -64,10 +61,12 @@ export default function Window({
     }
 
     const handleMouseUp = () => {
+      setIsDragging(false)
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
 
+    setIsDragging(true)
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
   }
@@ -143,7 +142,9 @@ export default function Window({
       <div
         onMouseDown={handleMouseDown}
         onDoubleClick={handleTitleDoubleClick}
-        className={`relative flex items-center h-9 px-3 cursor-move border-b border-[#3e4446] ${
+        className={`relative flex items-center h-9 px-3 border-b border-[#3e4446] ${
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        } ${
           isActive ? 'bg-[#1b1e20]' : 'bg-[#212426]'
         }`}
       >

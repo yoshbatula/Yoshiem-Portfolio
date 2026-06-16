@@ -1,5 +1,5 @@
 import heroImg from '../../../assets/Profile.svg'
-// ─── Skill dot-bar component ────────────────────────────────────────────────
+// Skill dot-bar component 
 function DotBar({ filled = 0, total = 5 }) {
   return (
     <div className="flex gap-[3px] mt-1.5">
@@ -15,7 +15,7 @@ function DotBar({ filled = 0, total = 5 }) {
   )
 }
 
-// ─── Skill card ─────────────────────────────────────────────────────────────
+// Skill card 
 function SkillCard({ category, name, filled, total = 5 }) {
   return (
     <div className="bg-[#2a2f32] border border-[#3e4446] rounded p-3 hover:border-[#3daee9]/40 transition-colors duration-200">
@@ -26,7 +26,7 @@ function SkillCard({ category, name, filled, total = 5 }) {
   )
 }
 
-// ─── Sidebar nav item ────────────────────────────────────────────────────────
+// Sidebar nav item 
 function NavItem({ icon, label, active = false }) {
   return (
     <div
@@ -42,21 +42,21 @@ function NavItem({ icon, label, active = false }) {
   )
 }
 
-// ─── Main component ──────────────────────────────────────────────────────────
+// Main component 
 export default function AboutMe() {
   const skills = [
     { category: 'LIBRARY',    name: 'React',          filled: 4 },
     { category: 'FRAMEWORK',  name: 'Laravel',        filled: 3 },
     { category: 'LANGUAGE',   name: 'Python',         filled: 3 },
     { category: 'TOOLS',      name: 'Git / Linux',    filled: 4 },
-    { category: 'TOOLS',      name: 'Blender',        filled: 2 },
+    { category: 'TOOLS',      name: 'Blender',        filled: 1 },
     { category: 'LANGUAGE',   name: 'JavaScript',     filled: 4 },
   ]
 
   return (
     <div className="flex h-full text-[#eff0f1] font-mono text-xs bg-[#31363b]">
 
-      {/* ── Sidebar ─────────────────────────────────────── */}
+      {/* Sidebar */}
       <aside className="w-[160px] shrink-0 bg-[#272b2d] border-r border-[#3e4446] flex flex-col py-3 px-2 gap-0.5">
         {/* Places heading */}
         <p className="text-[9px] tracking-[0.14em] text-[#596b75] uppercase font-bold px-3 mb-1.5">Places</p>
@@ -79,10 +79,10 @@ export default function AboutMe() {
         <p className="text-[9px] text-[#3e5060] px-3 mt-2">v1.0 · 2025</p>
       </aside>
 
-      {/* ── Main content ────────────────────────────────── */}
+      {/* Main content */}
       <main className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3e4446] scrollbar-track-transparent">
 
-        {/* ── Profile row ─────────────────────────────── */}
+        {/* Profile row */}
         <div className="flex gap-5 p-5 border-b border-[#3e4446]">
 
           {/* Avatar */}
@@ -110,7 +110,7 @@ export default function AboutMe() {
           </div>
         </div>
 
-        {/* ── Stats row ───────────────────────────────── */}
+        {/* Stats row */}
         <div className="flex gap-3 px-5 py-4 border-b border-[#3e4446]">
           {/* Stat: years coding */}
           <div className="bg-[#2a2f32] border border-[#3e4446] rounded p-4 flex flex-col justify-center min-w-[120px]">
@@ -127,7 +127,7 @@ export default function AboutMe() {
           </div>
         </div>
 
-        {/* ── Skills / Tech Stack ─────────────────────── */}
+        {/* Skills / Tech Stack */}
         <div className="px-5 pt-4 pb-2">
           <p className="text-[10px] tracking-[0.18em] text-[#596b75] uppercase font-bold mb-3">
             Skills / Tech Stack
