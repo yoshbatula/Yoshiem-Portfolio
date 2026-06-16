@@ -238,6 +238,8 @@ export default function Desktop() {
             onMinimize={() => minimizeWindow('resume')}
             onMaximize={() => toggleMaximizeWindow('resume')}
             onFocus={() => focusWindow('resume')}
+            centerTitle
+            hideIcon
           >
             <ResumeContent />
           </Window>
