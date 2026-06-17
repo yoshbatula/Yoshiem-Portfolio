@@ -10,6 +10,7 @@ import FileIcon from "../../assets/FileIcon.svg"
 import FolderIcon from "../../assets/FolderIcon.svg"
 import SettingsIcon from "../../assets/Settings.svg"
 import LifedumpIcon from "../../assets/Lifedump.svg"
+import SpotifyIcon from "../../assets/SpotifyIcon .svg"
 
 // Modals contents
 import AboutMe from "../components/modals/AboutMe"
@@ -18,6 +19,7 @@ import ProjectContent from "../components/modals/ProjectContent"
 import SettingsContent from "../components/modals/SettingsContent"
 import LifedumpContent from "../components/modals/LifedumpContent"
 import CertificatesContent from "../components/modals/CertificatesContent"
+import SpotifyContent from "../components/modals/SpotifyContent"
 
 const WALLPAPERS = {
   default: { type: 'image', value: BackgroundImage },
@@ -35,7 +37,8 @@ export default function Desktop() {
     project3: { id: 'project3', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 300, defaultY: 120, defaultWidth: 680, defaultHeight: 485 },
     settings: { id: 'settings', title: 'System Settings', icon: SettingsIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 140, defaultY: 50, defaultWidth: 720, defaultHeight: 520 },
     lifedump: { id: 'lifedump', title: 'Lifedump Photos', icon: LifedumpIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 800, defaultHeight: 520 },
-    certificates: { id: 'certificates', title: 'Certificates', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 260, defaultY: 90, defaultWidth: 680, defaultHeight: 520 }
+    certificates: { id: 'certificates', title: 'Certificates', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 260, defaultY: 90, defaultWidth: 680, defaultHeight: 520 },
+    spotify: { id: 'spotify', title: 'Spotify', icon: SpotifyIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 640, defaultHeight: 480 }
   })
 
   const [maxZIndex, setMaxZIndex] = useState(10)
@@ -145,7 +148,7 @@ export default function Desktop() {
 
     const iconMap = {
       about: FolderIcon, resume: FileIcon, project1: FolderIcon,
-      project2: FolderIcon, project3: FolderIcon, certificates: FolderIcon,
+      project2: FolderIcon, project3: FolderIcon, certificates: FolderIcon, spotify: SpotifyIcon,
     }
 
     setDesktopShortcuts(prev => {
@@ -448,6 +451,20 @@ export default function Desktop() {
             hideIcon
           >
             <CertificatesContent />
+          </Window>
+
+          {/* Spotify Window */}
+          <Window
+            {...windows.spotify}
+            isActive={activeWindowId === 'spotify'}
+            onClose={() => closeWindow('spotify')}
+            onMinimize={() => minimizeWindow('spotify')}
+            onMaximize={() => toggleMaximizeWindow('spotify')}
+            onFocus={() => focusWindow('spotify')}
+            centerTitle
+            hideIcon
+          >
+            <SpotifyContent />
           </Window>
 
         </div>

@@ -20,8 +20,6 @@ export default function BottomNav({
   const [muted, setMuted] = useState(false)
   const [micVolume, setMicVolume] = useState(80)
   const [wifiEnabled, setWifiEnabled] = useState(true)
-  const [spotifyPlaying, setSpotifyPlaying] = useState(false)
-  const [spotifyProgress, setSpotifyProgress] = useState(43)
   const [searchQuery, setSearchQuery] = useState('')
   const [ethernetConnected, setEthernetConnected] = useState(true)
   const [connecting, setConnecting] = useState(null)
@@ -114,86 +112,17 @@ export default function BottomNav({
         </button>
 
         {/* Spotify shortcut */}
-        <div className="relative">
-          <button 
-            onClick={() => togglePopup('spotify')}
-            className={`p-1.5 rounded transition-all cursor-pointer ${
-              activePopup === 'spotify' ? 'bg-[#3daee9]/20 border border-[#3daee9]/40' : 'hover:bg-white/10'
-            }`}
-            title="Spotify"
-          >
-            <img src={SpotifyIcon} alt="Spotify Icon" className="w-8 h-8" />
-          </button>
-
-          {activePopup === 'spotify' && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 bg-[#1d1f21] border border-[#3e4446] rounded-lg shadow-2xl overflow-hidden">
-              <div className="px-4 py-3 border-b border-[#3e4446] bg-[#1d1f21]">
-                <p className="text-[12px] font-semibold text-[#eff0f1] text-center tracking-wide">Spotify</p>
-              </div>
-
-              <div className="p-4 space-y-3 bg-[#25282a]">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded bg-gradient-to-br from-[#3daee9] to-[#9b59b6] shrink-0 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-                    </svg>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[12px] text-[#eff0f1] font-medium truncate">Blinding Lights</p>
-                    <p className="text-[10px] text-[#7b8f9a] truncate">The Weeknd</p>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={spotifyProgress}
-                    onChange={(e) => setSpotifyProgress(Number(e.target.value))}
-                    style={{ background: `linear-gradient(to right, #1db954 0%, #1db954 ${spotifyProgress}%, #3e4446 ${spotifyProgress}%, #3e4446 100%)` }}
-                    className="w-full h-1 appearance-none rounded-full outline-none cursor-pointer
-                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-                      [&::-webkit-slider-thumb]:bg-[#25282a] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#1db954]
-                      [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-125"
-                  />
-                  <div className="flex justify-between text-[9px] text-[#7b8f9a] font-mono">
-                    <span>1:32</span>
-                    <span>3:36</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center gap-4">
-                  <button className="text-[#7b8f9a] hover:text-[#eff0f1] transition-colors cursor-pointer">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => setSpotifyPlaying(!spotifyPlaying)}
-                    className="w-8 h-8 rounded-full bg-[#1db954] flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
-                  >
-                    {spotifyPlaying ? (
-                      <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
-                        <rect x="6" y="4" width="4" height="16" />
-                        <rect x="14" y="4" width="4" height="16" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    )}
-                  </button>
-                  <button className="text-[#7b8f9a] hover:text-[#eff0f1] transition-colors cursor-pointer">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <button 
+          onClick={() => onToggleWindow('spotify')}
+          className={`p-1.5 rounded transition-all cursor-pointer ${
+            windows['spotify']?.isOpen && activeWindowId === 'spotify' 
+              ? 'bg-[#3daee9]/20 border border-[#3daee9]/40' 
+              : 'hover:bg-white/10'
+          }`}
+          title="Spotify"
+        >
+          <img src={SpotifyIcon} alt="Spotify Icon" className="w-8 h-8" />
+        </button>
       </div>
 
       {/* Taskbar divider */}
