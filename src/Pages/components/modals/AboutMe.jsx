@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import heroImg from '../../../assets/Profile.svg'
 // Skill dot-bar component 
 function DotBar({ filled = 0, total = 5 }) {
@@ -44,6 +45,33 @@ function NavItem({ icon, label, active = false }) {
 
 // Main component 
 export default function AboutMe() {
+  const name = "Yosh Batula"
+  const [displayed, setDisplayed] = useState("")
+  const [phase, setPhase] = useState("typing") // typing | pause | deleting
+
+  useEffect(() => {
+    if (phase === "typing") {
+      if (displayed.length < name.length) {
+        const timer = setTimeout(() => setDisplayed(name.slice(0, displayed.length + 1)), 100)
+        return () => clearTimeout(timer)
+      } else {
+        const timer = setTimeout(() => setPhase("pause"), 1500)
+        return () => clearTimeout(timer)
+      }
+    } else if (phase === "pause") {
+      const timer = setTimeout(() => setPhase("deleting"), 500)
+      return () => clearTimeout(timer)
+    } else if (phase === "deleting") {
+      if (displayed.length > 0) {
+        const timer = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 50)
+        return () => clearTimeout(timer)
+      } else {
+        const timer = setTimeout(() => setPhase("typing"), 500)
+        return () => clearTimeout(timer)
+      }
+    }
+  }, [displayed, phase, name])
+
   const skills = [
     { category: 'LIBRARY',    name: 'React',          filled: 4 },
     { category: 'FRAMEWORK',  name: 'Laravel',        filled: 3 },
@@ -100,7 +128,10 @@ export default function AboutMe() {
 
           {/* Info */}
           <div className="flex flex-col justify-center gap-1.5 min-w-0">
-            <h2 className="text-[22px] font-bold text-[#eff0f1] tracking-wide leading-none">Yosh Batula</h2>
+            <h2 className="text-[22px] font-bold text-[#eff0f1] tracking-wide leading-none">
+              {displayed}
+              <span className="inline-block w-[2px] h-[22px] bg-[#3daee9] ml-0.5 animate-pulse align-middle" />
+            </h2>
             <p className="text-[11px] text-[#7b8f9a]">
               @yoshbatula &nbsp;·&nbsp; BS Computer Science &nbsp;·&nbsp; University of Mindanao
             </p>

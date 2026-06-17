@@ -3,6 +3,7 @@ import BackgroundImage from "../../assets/BackgroundImage.png"
 import BottomNav from "../components/BottomNav"
 import StartMenu from "../components/StartMenu"
 import Window from "../components/Window"
+import "./Desktop.css"
 
 // Desktop icons
 import FileIcon from "../../assets/FileIcon.svg"
@@ -181,9 +182,33 @@ export default function Desktop() {
         
         {/* Welcome Text Overlay (Slightly faded behind windows) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none opacity-95">
-          <div className="transform translate-y-[-10%] flex flex-col items-center">
-            <h1 className="text-white text-[32px] md:text-[41px] font-light tracking-widest">WELCOME TO MY</h1>
-            <h1 className="text-white text-[64px] md:text-[80px] font-light mt-2 tracking-widest font-display">PORTFOLIO</h1>
+          <div className="pointer-events-auto transform translate-y-[-10%] flex flex-col items-center">
+            <h1 className="text-white text-[32px] md:text-[41px] font-light tracking-widest">
+              <span className="letter">W</span>
+              <span className="letter">E</span>
+              <span className="letter">L</span>
+              <span className="letter">C</span>
+              <span className="letter">O</span>
+              <span className="letter">M</span>
+              <span className="letter">E</span>
+              <span className="inline-block">&nbsp;</span>
+              <span className="letter">T</span>
+              <span className="letter">O</span>
+              <span className="inline-block">&nbsp;</span>
+              <span className="letter">M</span>
+              <span className="letter">Y</span>
+            </h1>
+            <h1 className="text-white text-[64px] md:text-[80px] font-light mt-2 tracking-widest font-display">
+              <span className="letter">P</span>
+              <span className="letter">O</span>
+              <span className="letter">R</span>
+              <span className="letter">T</span>
+              <span className="letter">F</span>
+              <span className="letter">O</span>
+              <span className="letter">L</span>
+              <span className="letter">I</span>
+              <span className="letter">O</span>
+            </h1>
           </div>
         </div>
 
