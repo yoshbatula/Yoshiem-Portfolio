@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import BackgroundImage from "../../assets/BackgroundImage.png"
 import BottomNav from "../components/BottomNav"
 import StartMenu from "../components/StartMenu"
@@ -49,8 +49,84 @@ export default function Desktop() {
     { id: 'project3', title: 'Project 03', icon: FolderIcon, x: 85, y: 28 },
   ])
 
-  const handleDropOnDesktop = (e) => {
+  const dragRef = useRef(null)
+  const iconRefs = useRef({})
+
+  const handleIconMouseDown = (e, id) => {
+    if (e.button !== 0) return
     e.preventDefault()
+    const zone = document.querySelector('.desktop-dropzone')
+    if (!zone) return
+    const rect = zone.getBoundingClientRect()
+    const shortcut = desktopShortcuts.find(s => s.id === id)
+    if (!shortcut) return
+
+    const el = iconRefs.current[id]
+    if (el) {
+      el.classList.add('is-dragging')
+      el.style.setProperty('--start-x', `${shortcut.x}%`)
+      el.style.setProperty('--start-y', `${shortcut.y}%`)
+    }
+
+    dragRef.current = { id, startX: e.clientX, startY: e.clientY, moved: false, sx: shortcut.x, sy: shortcut.y, rect }
+  }
+
+  const handleIconMouseMove = useCallback((e) => {
+    const d = dragRef.current
+    if (!d) return
+    const dx = e.clientX - d.startX
+    const dy = e.clientY - d.startY
+    if (Math.hypot(dx, dy) > 3) d.moved = true
+
+    const el = iconRefs.current[d.id]
+    if (el) {
+      el.style.transform = `translate(${dx}px, ${dy}px)`
+    }
+  }, [])
+
+  const handleIconMouseUp = useCallback(() => {
+    const d = dragRef.current
+    if (!d) return
+    const el = iconRefs.current[d.id]
+    if (el) {
+      el.classList.remove('is-dragging')
+      el.style.removeProperty('--start-x')
+      el.style.removeProperty('--start-y')
+    }
+
+    if (d.moved && el) {
+      const match = el.style.transform.match(/translate\(([\d.-]+)px, ([\d.-]+)px\)/)
+      if (match) {
+        const dx = parseFloat(match[1])
+        const dy = parseFloat(match[2])
+        const x = Math.max(0, Math.min(92, d.sx + (dx / d.rect.width) * 100))
+        const y = Math.max(0, Math.min(90, d.sy + (dy / d.rect.height) * 100))
+        el.style.left = `${x}%`
+        el.style.top = `${y}%`
+        el.style.transform = ''
+        setDesktopShortcuts(prev =>
+          prev.map(s => s.id === d.id ? { ...s, x, y } : s)
+        )
+      }
+    }
+    dragRef.current = null
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleIconMouseMove)
+    window.addEventListener('mouseup', handleIconMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', handleIconMouseMove)
+      window.removeEventListener('mouseup', handleIconMouseUp)
+    }
+  }, [handleIconMouseMove, handleIconMouseUp])
+
+  const handleIconClick = (e, id) => {
+    if (dragRef.current?.moved) return
+    openWindow(id)
+  }
+
+  const handleDropOnDesktop = (e) => {
     const raw = e.dataTransfer.getData('application/x-app')
     if (!raw) return
 
@@ -212,25 +288,34 @@ export default function Desktop() {
           </div>
         </div>
 
-        {/* Desktop Shortcuts — draggable, drop-to-create */}
+        {/* Desktop Shortcuts — draggable */}
         <div
-          className="flex-1 relative pointer-events-none"
+          className="flex-1 relative pointer-events-none desktop-dropzone"
           onDrop={handleDropOnDesktop}
           onDragOver={handleDragOver}
         >
           {desktopShortcuts.map((shortcut) => (
             <div
               key={shortcut.id}
-              className="absolute pointer-events-auto"
+              ref={(el) => { iconRefs.current[shortcut.id] = el }}
+              className="absolute pointer-events-auto desktop-icon"
               style={{ top: `${shortcut.y}%`, left: `${shortcut.x}%` }}
             >
-              <button
-                onClick={() => openWindow(shortcut.id)}
-                className="flex flex-col items-center p-2.5 rounded-lg hover:bg-[#253C48] border border-transparent hover:border-[#3daee9]/30 w-24 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer group"
+              <div
+                onMouseDown={(e) => handleIconMouseDown(e, shortcut.id)}
+                onClick={(e) => handleIconClick(e, shortcut.id)}
+                className="flex flex-col items-center p-2.5 rounded-lg border border-transparent w-24 select-none cursor-grab active:cursor-grabbing hover:bg-[#253C48]/60 hover:border-[#3daee9]/20"
               >
-                <img src={shortcut.icon} alt={shortcut.title} className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform" />
-                <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md">{shortcut.title}</span>
-              </button>
+                <img
+                  src={shortcut.icon}
+                  alt={shortcut.title}
+                  className="w-14 h-14 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] pointer-events-none select-none drag-none"
+                  draggable="false"
+                />
+                <span className="text-white text-xs font-semibold mt-2.5 text-center leading-tight drop-shadow-md pointer-events-none select-none">
+                  {shortcut.title}
+                </span>
+              </div>
             </div>
           ))}
         </div>
