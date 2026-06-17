@@ -103,8 +103,7 @@ export default function StartMenu({
   }
 
   const handleShutdown = () => {
-    // Navigate back to loading page or close
-    navigate('/')
+    navigate('/shutdown')
     onClose()
   }
 
