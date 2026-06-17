@@ -19,7 +19,7 @@ export default function CertificatesContent() {
         <div className="flex-1" />
         <p className="text-[9px] text-[#3e5060] px-3 mt-2">v1.0 · 2026</p>
       </aside>
-      <main className="flex-1 overflow-y-auto p-5 flex flex-col gap-5">
+      <main className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3e4446] scrollbar-track-transparent p-5 flex flex-col gap-5">
         <p className="text-[10px] tracking-[0.18em] text-[#596b75] uppercase font-bold">Certificates</p>
         {certs.map(cert => (
           <div key={cert.id} className="bg-[#2a2f32] border border-[#3e4446] rounded p-4">
