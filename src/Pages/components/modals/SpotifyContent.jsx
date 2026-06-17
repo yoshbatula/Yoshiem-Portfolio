@@ -123,12 +123,19 @@ function AnimatedLyrics({ state, compact }) {
   const { track, currentTime } = state
   const lines = track.lyrics
   const totalChars = lines.reduce((s, l) => s + l.text.length, 0)
+  const vocalStart = lines[0]?.time ?? 0
+  const vocalDur = track.duration - vocalStart
+
+  const elapsed = Math.max(0, currentTime - vocalStart)
+  const progress = Math.min(1, vocalDur > 0 ? elapsed / vocalDur : currentTime / track.duration)
+
   let charAcc = 0
-  let currentLine = lines.length - 1
+  let currentLine = 0
+  const targetChar = progress * totalChars
   for (let i = 0; i < lines.length; i++) {
-    const endTime = ((charAcc + lines[i].text.length) / totalChars) * track.duration
-    if (currentTime < endTime) { currentLine = i; break }
     charAcc += lines[i].text.length
+    if (targetChar <= charAcc) { currentLine = i; break }
+    if (i === lines.length - 1) currentLine = i
   }
   const containerRef = useRef(null)
   const lineRefs = useRef([])
