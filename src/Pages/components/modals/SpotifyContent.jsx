@@ -122,20 +122,9 @@ function AnimatedLyrics({ state, compact }) {
   if (!state || !state.track) return null
   const { track, currentTime } = state
   const lines = track.lyrics
-  const totalChars = lines.reduce((s, l) => s + l.text.length, 0)
-  const vocalStart = lines[0]?.time ?? 0
-  const vocalDur = track.duration - vocalStart
-
-  const elapsed = Math.max(0, currentTime - vocalStart)
-  const progress = Math.min(1, vocalDur > 0 ? elapsed / vocalDur : currentTime / track.duration)
-
-  let charAcc = 0
   let currentLine = 0
-  const targetChar = progress * totalChars
   for (let i = 0; i < lines.length; i++) {
-    charAcc += lines[i].text.length
-    if (targetChar <= charAcc) { currentLine = i; break }
-    if (i === lines.length - 1) currentLine = i
+    if (currentTime >= lines[i].time) currentLine = i
   }
   const containerRef = useRef(null)
   const lineRefs = useRef([])
@@ -471,18 +460,18 @@ export default function SpotifyContent() {
     return unsub
   }, [])
 
-  const prevTrack = useRef(-1)
+  const prevTrackRef = useRef(-1)
   const currentTrack = state?.currentTrack
   const isPlaying = state?.isPlaying
 
   useEffect(() => {
     if (currentTrack == null) return
-    const trackChanged = currentTrack !== prevTrack.current
-    prevTrack.current = currentTrack
+    const trackChanged = currentTrack !== prevTrackRef.current
+    prevTrackRef.current = currentTrack
     if (trackChanged && isPlaying) {
       setShowQueue(true)
     }
-  }, [currentTrack, isPlaying])
+  }, [currentTrack, isPlaying, setShowQueue])
 
   if (!state) return null
 
