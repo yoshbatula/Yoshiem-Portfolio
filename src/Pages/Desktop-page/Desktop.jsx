@@ -17,6 +17,7 @@ import ResumeContent from "../components/modals/ResumeContent"
 import ProjectContent from "../components/modals/ProjectContent"
 import SettingsContent from "../components/modals/SettingsContent"
 import LifedumpContent from "../components/modals/LifedumpContent"
+import CertificatesContent from "../components/modals/CertificatesContent"
 
 const WALLPAPERS = {
   default: { type: 'image', value: BackgroundImage },
@@ -33,7 +34,8 @@ export default function Desktop() {
     project2: { id: 'project2', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 240, defaultY: 100, defaultWidth: 680, defaultHeight: 485 },
     project3: { id: 'project3', title: 'Development', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 300, defaultY: 120, defaultWidth: 680, defaultHeight: 485 },
     settings: { id: 'settings', title: 'System Settings', icon: SettingsIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 140, defaultY: 50, defaultWidth: 720, defaultHeight: 520 },
-    lifedump: { id: 'lifedump', title: 'Lifedump Photos', icon: LifedumpIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 800, defaultHeight: 520 }
+    lifedump: { id: 'lifedump', title: 'Lifedump Photos', icon: LifedumpIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 200, defaultY: 70, defaultWidth: 800, defaultHeight: 520 },
+    certificates: { id: 'certificates', title: 'Certificates', icon: FolderIcon, isOpen: false, isMinimized: false, isMaximized: false, zIndex: 10, defaultX: 260, defaultY: 90, defaultWidth: 680, defaultHeight: 520 }
   })
 
   const [maxZIndex, setMaxZIndex] = useState(10)
@@ -47,6 +49,7 @@ export default function Desktop() {
     { id: 'project1', title: 'Project 01', icon: FolderIcon, x: 3, y: 51 },
     { id: 'project2', title: 'Project 02', icon: FolderIcon, x: 3, y: 74 },
     { id: 'project3', title: 'Project 03', icon: FolderIcon, x: 85, y: 28 },
+    { id: 'certificates', title: 'Certifications', icon: FolderIcon, x: 85, y: 51 },
   ])
 
   const dragRef = useRef(null)
@@ -142,7 +145,7 @@ export default function Desktop() {
 
     const iconMap = {
       about: FolderIcon, resume: FileIcon, project1: FolderIcon,
-      project2: FolderIcon, project3: FolderIcon,
+      project2: FolderIcon, project3: FolderIcon, certificates: FolderIcon,
     }
 
     setDesktopShortcuts(prev => {
@@ -431,6 +434,20 @@ export default function Desktop() {
             hideIcon
           >
             <LifedumpContent />
+          </Window>
+
+          {/* Certificates Window */}
+          <Window
+            {...windows.certificates}
+            isActive={activeWindowId === 'certificates'}
+            onClose={() => closeWindow('certificates')}
+            onMinimize={() => minimizeWindow('certificates')}
+            onMaximize={() => toggleMaximizeWindow('certificates')}
+            onFocus={() => focusWindow('certificates')}
+            centerTitle
+            hideIcon
+          >
+            <CertificatesContent />
           </Window>
 
         </div>

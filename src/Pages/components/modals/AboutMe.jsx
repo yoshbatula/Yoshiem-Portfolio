@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import heroImg from '../../../assets/Profile.svg'
+import FileIcon from '../../../assets/FileIcon.svg'
 // Skill dot-bar component 
 function DotBar({ filled = 0, total = 5 }) {
   return (
@@ -92,12 +93,7 @@ export default function AboutMe() {
         <NavItem
           label="About me"
           active
-          icon={
-            <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-            </svg>
-          }
+          icon={<img src={FileIcon} alt="" className="w-3.5 h-3.5 shrink-0" />}
         />
 
         {/* Spacer */}

@@ -3,6 +3,7 @@ import LoadingPage from './Pages/Loading-page/Loading-page'
 import LockScreen from './Pages/LockScreenPage/LockScreen'
 import Desktop from './Pages/Desktop-page/Desktop'
 import ShutdownPage from './Pages/ShutdownPage/ShutdownPage'
+import RestartPage from './Pages/RestartPage/RestartPage'
 import MobileNotice from './Pages/components/MobileNotice'
 import './App.css'
 
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/lockscreen" element={<LockScreen />} />
         <Route path="/desktop" element={<Desktop />} />
         <Route path="/shutdown" element={<ShutdownPage />} />
+        <Route path="/restart" element={<RestartPage />} />
       </Routes>
     </Router>
   )

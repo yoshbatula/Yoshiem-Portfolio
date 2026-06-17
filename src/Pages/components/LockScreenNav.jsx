@@ -18,7 +18,7 @@ export default function LockScreenNav() {
                 </button>
             </div>
             <div className="flex ml-auto gap-3">
-                <button className="hover:cursor-pointer" onClick={() => navigate('/')}><img src={RebootIcon} alt="Reboot" className="w-10 h-10 hover:opacity-75 transition"></img></button>
+                <button className="hover:cursor-pointer" onClick={() => navigate('/restart')}><img src={RebootIcon} alt="Reboot" className="w-10 h-10 hover:opacity-75 transition"></img></button>
                 <button className="hover:cursor-pointer" onClick={() => navigate('/shutdown')}><img src={ShutdownIcon} alt="Shutdown" className="w-10 h-10 hover:opacity-75 transition"></img></button>
             </div>
         </div>

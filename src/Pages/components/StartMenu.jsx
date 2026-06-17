@@ -5,6 +5,7 @@ import FolderIcon from '../../assets/FolderIcon.svg'
 import UserAvatar from '../../assets/UserAvatar.svg'
 import Lifedump from '../../assets/Lifedump.svg'
 import Settings from '../../assets/Settings.svg'
+import Spotify from '../../assets/SpotifyIcon .svg'
 export default function StartMenu({
   isOpen,
   onClose,
@@ -76,7 +77,9 @@ export default function StartMenu({
     { id: 'resume', title: 'Resume.pdf', type: 'file', icon: FileIcon, categories: ['All Applications'] },
     { id: 'lifedump', title: 'Lifedump', type: 'folder', icon: Lifedump, categories: ['All Applications'] },
     { id: 'about', title: 'About me', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Education'] },
-    { id: 'settings', title: 'System Settings', type: 'folder', icon: Settings, categories: ['Contact', 'All Applications'] }
+    { id: 'settings', title: 'System Settings', type: 'folder', icon: Settings, categories: ['Contact', 'All Applications'] },
+    { id: 'certificates', title: 'Certifications', type: 'folder', icon: FolderIcon, categories: ['All Applications', 'Education'] },
+    { id: 'spotify', title: 'Spotify', type: 'categories', icon: Spotify, categories: ['All Applications'] }
   ]
 
   // Filter apps by search term and active category tab
@@ -97,8 +100,7 @@ export default function StartMenu({
   }
 
   const handleRestart = () => {
-    // Reboot the simulated OS by navigating to the loader page
-    navigate('/')
+    navigate('/restart')
     onClose()
   }
 
