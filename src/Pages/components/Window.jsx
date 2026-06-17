@@ -115,7 +115,7 @@ export default function Window({
         top: 0,
         left: 0,
         width: '100%',
-        height: 'calc(100vh - 60px)', // Leave room for bottom navigation
+        height: 'calc(100vh - 56px)', // Leave room for bottom navigation
         zIndex,
       }
     : {
@@ -150,9 +150,14 @@ export default function Window({
       >
         {/* Title — left or centered */}
         {centerTitle ? (
-          <span className="absolute inset-x-0 text-center text-sm font-medium text-[#eff0f1] tracking-wide truncate pointer-events-none">
-            {title}
-          </span>
+          <>
+            {!hideIcon && icon && (
+              <img src={icon} alt="" className="w-4 h-4 object-contain relative z-10" />
+            )}
+            <span className="absolute inset-x-0 text-center text-sm font-medium text-[#eff0f1] tracking-wide truncate pointer-events-none">
+              {title}
+            </span>
+          </>
         ) : (
           <div className="flex items-center gap-2">
             {!hideIcon && icon && <img src={icon} alt="" className="w-4.5 h-4.5 object-contain" />}

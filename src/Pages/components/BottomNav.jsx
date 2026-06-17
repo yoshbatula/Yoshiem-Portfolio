@@ -12,7 +12,8 @@ export default function BottomNav({
   activeWindowId = null,
   onToggleWindow = () => {},
   onOpenStartMenu = () => {},
-  isStartMenuOpen = false
+  isStartMenuOpen = false,
+  isMaximized = false
 }) {
   const [time, setTime] = useState(new Date())
   const [activePopup, setActivePopup] = useState(null)
@@ -69,7 +70,7 @@ export default function BottomNav({
   const openWindows = Object.values(windows).filter(w => w.isOpen)
 
   return (
-    <div className="px-4 w-full h-14 bg-[#242729]/95 backdrop-blur-md border border-[#3e4446]/50 rounded-[10px] flex flex-row items-center gap-3 shadow-xl select-none">
+    <div className={`px-4 w-full h-14 bg-[#242729]/95 backdrop-blur-md border border-[#3e4446]/50 flex flex-row items-center gap-3 shadow-xl select-none ${isMaximized ? '' : 'rounded-[10px]'}`}>
       
       {/* Quick Launch Icons */}
       <div className="flex items-center gap-1">

@@ -1,28 +1,156 @@
 import { useState, useEffect } from 'react'
 import UserAvatar from '../../../assets/UserAvatar.svg'
-import SpotifyIcon from '../../../assets/SpotifyIcon .svg'
-import { playlist, subscribe, togglePlay, nextTrack, prevTrack, playTrack, setVolume } from '../../../utils/spotifyPlayer'
+import { playlist, subscribe, togglePlay, nextTrack, prevTrack, playTrack, seekTo, setVolume, addToQueue, removeFromQueue } from '../../../utils/spotifyPlayer'
+
+const colors = ['from-[#1DB954] to-[#169c46]', 'from-[#E13300] to-[#ff6b35]', 'from-[#9b59b6] to-[#6c3483]', 'from-[#2980b9] to-[#154360]', 'from-[#f39c12] to-[#b7950b]']
 
 function formatTime(seconds) {
+  if (!seconds || isNaN(seconds)) return '0:00'
   const m = Math.floor(seconds / 60)
   const s = Math.floor(seconds % 60)
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-const navItems = [
-  { id: 'home', label: 'Home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { id: 'search', label: 'Search', icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
-  { id: 'library', label: 'Your Library', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-]
+function Header({ searchQuery, onSearchChange }) {
+  return (
+    <div className="flex items-center justify-center px-5 py-2.5 bg-[#121212] border-b border-white/5 shrink-0">
+      <div className="relative w-full max-w-md">
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b3b3b3]" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+        </svg>
+        <input
+          type="text"
+          placeholder="What do you want to listen to?"
+          value={searchQuery}
+          onChange={e => onSearchChange(e.target.value)}
+          className="w-full pl-9 pr-3 py-1.5 rounded-full bg-[#242424] text-sm text-white placeholder-[#b3b3b3] outline-none focus:ring-2 focus:ring-white/20 transition-all"
+        />
+      </div>
+    </div>
+  )
+}
+
+function PlayerBar({ state }) {
+  if (!state || !state.track) return null
+  const { track, isPlaying, progress, volume } = state
+
+  return (
+    <div className="h-[72px] shrink-0 bg-[#181818] border-t border-white/5 flex items-center px-4 gap-4">
+      <div className="flex items-center gap-3 min-w-0 w-[30%]">
+        <div className={`w-12 h-12 rounded bg-gradient-to-br ${colors[track.id % colors.length]} shrink-0 flex items-center justify-center`}>
+          <span className="text-white/40 text-lg font-bold">{track.title[0]}</span>
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm text-white truncate">{track.title}</p>
+          <p className="text-[11px] text-[#b3b3b3] truncate">{track.artist}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center gap-1 flex-1 max-w-[40%]">
+        <div className="flex items-center gap-4">
+          <button onClick={prevTrack} className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
+          </button>
+          <button onClick={togglePlay} className="w-8 h-8 rounded-full bg-white flex items-center justify-center hover:scale-105 transition-transform cursor-pointer">
+            {isPlaying ? (
+              <svg className="w-4 h-4 text-black" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
+            ) : (
+              <svg className="w-4 h-4 text-black ml-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            )}
+          </button>
+          <button onClick={nextTrack} className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" /></svg>
+          </button>
+        </div>
+        <div className="flex items-center gap-2 w-full">
+          <span className="text-[10px] text-[#b3b3b3] font-mono w-8 text-right">{formatTime(state.currentTime)}</span>
+          <div className="relative flex-1 h-1 bg-[#535353] rounded-full group cursor-pointer" onClick={e => seekTo(e.nativeEvent.offsetX / e.currentTarget.offsetWidth)}>
+            <div className="h-full bg-white rounded-full group-hover:bg-[#1DB954] transition-colors relative" style={{ width: `${progress * 100}%` }}>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+          </div>
+          <span className="text-[10px] text-[#b3b3b3] font-mono w-8">{formatTime(track.duration)}</span>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-end gap-2 w-[30%]">
+        <svg className="w-4 h-4 text-[#b3b3b3]" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.5v7a4.49 4.49 0 002.5-3.5z" /></svg>
+        <input type="range" min="0" max="1" step="0.01" value={volume} onChange={e => setVolume(Number(e.target.value))}
+          style={{ background: `linear-gradient(to right, #fff 0%, #fff ${volume * 100}%, #535353 ${volume * 100}%, #535353 100%)` }}
+          className="w-20 h-1 appearance-none rounded-full outline-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:opacity-0 hover:[&::-webkit-slider-thumb]:opacity-100 transition-all"
+        />
+      </div>
+    </div>
+  )
+}
+
+function NowPlaying({ state }) {
+  if (!state || !state.track) return null
+  const { track } = state
+
+  return (
+    <div className="p-8 flex gap-8 items-start">
+      <div className={`w-60 h-60 rounded bg-gradient-to-br ${colors[track.id % colors.length]} shrink-0 flex items-center justify-center shadow-2xl`}>
+        <span className="text-7xl text-white/30 font-bold">{track.title[0]}</span>
+      </div>
+      <div className="flex-1 min-w-0 space-y-6">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#b3b3b3] mb-1">Now Playing</p>
+          <h1 className="text-3xl font-bold text-white leading-tight">{track.title}</h1>
+          <p className="text-sm text-[#b3b3b3]">{track.artist}</p>
+        </div>
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#b3b3b3] mb-2">Lyrics</p>
+          <div className="text-sm text-[#b3b3b3] leading-relaxed whitespace-pre-line italic border-l-2 border-[#1DB954] pl-4 max-h-48 overflow-y-auto">
+            {track.lyrics}
+          </div>
+        </div>
+        <QueueViewCompact state={state} />
+      </div>
+    </div>
+  )
+}
+
+function QueueViewCompact({ state }) {
+  const { queue } = state
+  if (queue.length === 0) return null
+
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[#b3b3b3] mb-2">Next Up ({queue.length})</p>
+      <div className="space-y-1 max-h-36 overflow-y-auto">
+        {queue.map((trackId, i) => {
+          const s = playlist[trackId]
+          return (
+            <div key={i} className="flex items-center gap-3 px-2 py-1 rounded hover:bg-white/5 transition-colors group">
+              <span className="text-[10px] text-[#535353] w-3">{i + 1}</span>
+              <div className={`w-7 h-7 rounded bg-gradient-to-br ${colors[trackId % colors.length]} shrink-0 flex items-center justify-center`}>
+                <span className="text-white/60 text-[10px] font-bold">{s.title[0]}</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] text-white truncate">{s.title}</p>
+                <p className="text-[10px] text-[#b3b3b3] truncate">{s.artist}</p>
+              </div>
+              <button onClick={() => removeFromQueue(trackId)} className="text-[#535353] hover:text-white text-[10px] cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
 function Sidebar({ activeNav, onNavChange }) {
+  const items = [
+    { id: 'home', label: 'Home', icon: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z' },
+    { id: 'now-playing', label: 'Now Playing', icon: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z' },
+    { id: 'library', label: 'Your Library', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+  ]
+
   return (
     <div className="w-[180px] shrink-0 bg-[#000000] flex flex-col py-4 px-3 select-none">
-      <div className="mb-6 px-2">
-        <img src={SpotifyIcon} alt="Spotify" className="h-8" />
-      </div>
       <nav className="space-y-1">
-        {navItems.map(item => (
+        {items.map(item => (
           <button
             key={item.id}
             onClick={() => onNavChange(item.id)}
@@ -43,232 +171,95 @@ function Sidebar({ activeNav, onNavChange }) {
           <img src={UserAvatar} alt="" className="w-8 h-8 rounded-full object-cover" />
           <div className="min-w-0">
             <p className="text-xs text-white font-medium truncate">Yoshiem</p>
-            <p className="text-[10px] text-[#b3b3b3] truncate">Playlist</p>
+            <p className="text-[10px] text-[#b3b3b3] truncate">{playlist.length} songs</p>
           </div>
         </div>
-        <div className="mt-2 text-[10px] text-[#b3b3b3] leading-relaxed">
-          {playlist.length} songs · ~{Math.round(playlist.reduce((a, s) => a + s.duration, 0) / 60)} min
-        </div>
       </div>
     </div>
   )
 }
 
-function NowPlayingBar({ state }) {
-  if (!state) return null
-  const { track, isPlaying, volume, progress } = state
-
-  return (
-    <div className="h-[72px] shrink-0 bg-[#181818] border-t border-[#282828] flex items-center px-4 gap-4 select-none">
-      <div className="flex items-center gap-3 min-w-[180px] max-w-[280px]">
-        <div className="w-12 h-12 rounded bg-gradient-to-br from-[#1DB954] to-[#169c46] shrink-0 flex items-center justify-center">
-          <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-          </svg>
-        </div>
-        <div className="min-w-0">
-          <p className="text-sm text-white font-medium truncate hover:underline cursor-pointer">{track.title}</p>
-          <p className="text-[11px] text-[#b3b3b3] truncate hover:underline hover:text-white cursor-pointer">{track.artist}</p>
-        </div>
-      </div>
-      <div className="flex-1 flex flex-col items-center gap-1 max-w-[600px] mx-auto">
-        <div className="flex items-center gap-4">
-          <button className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 4v16l17-8z" />
-            </svg>
-          </button>
-          <button onClick={prevTrack} className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
-            </svg>
-          </button>
-          <button
-            onClick={togglePlay}
-            className="w-8 h-8 rounded-full bg-white flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
-          >
-            {isPlaying ? (
-              <svg className="w-4 h-4 text-black" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="6" y="4" width="4" height="16" />
-                <rect x="14" y="4" width="4" height="16" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4 text-black ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            )}
-          </button>
-          <button onClick={nextTrack} className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
-            </svg>
-          </button>
-          <button className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
-            </svg>
-          </button>
-        </div>
-        <div className="w-full flex items-center gap-2">
-          <span className="text-[10px] text-[#b3b3b3] font-mono w-8 text-right">{formatTime(progress * track.duration)}</span>
-          <div className="flex-1 h-1 bg-[#535353] rounded-full group cursor-pointer">
-            <div className="h-full bg-white rounded-full group-hover:bg-[#1DB954] transition-colors relative" style={{ width: `${progress * 100}%` }}>
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-          </div>
-          <span className="text-[10px] text-[#b3b3b3] font-mono w-8">{formatTime(track.duration)}</span>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 min-w-[120px] justify-end">
-        <button className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M15.536 8.464a5 5 0 010 7.072M11.93 12h.01" />
-          </svg>
-        </button>
-        <button className="text-[#b3b3b3] hover:text-white transition-colors cursor-pointer">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" />
-          </svg>
-        </button>
-        <svg className="w-4 h-4 text-[#b3b3b3]" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.5v7a4.49 4.49 0 002.5-3.5z" />
-        </svg>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={e => setVolume(Number(e.target.value))}
-          style={{
-            background: `linear-gradient(to right, #fff 0%, #fff ${volume * 100}%, #535353 ${volume * 100}%, #535353 100%)`,
-          }}
-          className="w-20 h-1 appearance-none rounded-full outline-none cursor-pointer
-            [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-            [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:opacity-0
-            hover:[&::-webkit-slider-thumb]:opacity-100 transition-all"
-        />
-      </div>
-    </div>
-  )
-}
-
-function HomeView() {
+function HomeView({ onPlay }) {
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-white mb-6">Good evening</h1>
-      <div className="flex items-center gap-3 bg-white/5 hover:bg-white/10 rounded overflow-hidden transition-colors cursor-pointer group w-[280px]">
-        <div className="w-16 h-16 bg-gradient-to-br from-[#1DB954] to-[#0d4721] shrink-0 flex items-center justify-center">
-          <svg className="w-8 h-8 text-white/80" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[#1DB954] to-[#169c46] flex items-center justify-center">
+          <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
         </div>
-        <span className="text-sm text-white font-semibold">Liked Songs</span>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#b3b3b3]">Playlist</p>
+          <h1 className="text-2xl font-bold text-white">Liked Songs</h1>
+          <p className="text-[11px] text-[#b3b3b3] mt-0.5">{playlist.length} songs</p>
+        </div>
       </div>
-    </div>
-  )
-}
-
-function SearchView() {
-  const [query, setQuery] = useState('')
-  const filtered = query
-    ? playlist.filter(s => s.title.toLowerCase().includes(query.toLowerCase()) || s.artist.toLowerCase().includes(query.toLowerCase()))
-    : []
-
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-white mb-4">Search</h1>
-      <div className="relative mb-6">
-        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#b3b3b3]" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          type="text"
-          placeholder="What do you want to listen to?"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          className="w-full bg-[#2a2a2a] hover:bg-[#3a3a3a] focus:bg-white text-black text-sm rounded-full py-3 pl-10 pr-4 outline-none transition-colors placeholder:text-[#b3b3b3] focus:placeholder:text-black"
-        />
-      </div>
-      {query ? (
-        <div className="space-y-1">
-          {filtered.length === 0 && <p className="text-sm text-[#b3b3b3]">No results found for "{query}"</p>}
-          {filtered.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => playTrack(playlist.indexOf(s))}
-              className="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors text-left cursor-pointer"
-            >
-              <div className="w-10 h-10 rounded bg-gradient-to-br from-[#1DB954] to-[#169c46] shrink-0" />
+      <div className="space-y-0.5">
+        {playlist.map((s, i) => (
+          <div key={i} className="group flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors">
+            <button onClick={() => { playTrack(i); onPlay() }} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
+              <div className={`w-10 h-10 rounded bg-gradient-to-br ${colors[i % colors.length]} shrink-0 flex items-center justify-center relative`}>
+                <span className="text-white/60 text-sm font-bold group-hover:hidden">{s.title[0]}</span>
+                <svg className="w-4 h-4 text-white hidden group-hover:block" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
               <div className="min-w-0">
                 <p className="text-sm text-white truncate">{s.title}</p>
                 <p className="text-[12px] text-[#b3b3b3] truncate">{s.artist}</p>
               </div>
-              <span className="text-sm text-[#b3b3b3] ml-auto">{formatTime(s.duration)}</span>
             </button>
-          ))}
-        </div>
-      ) : (
-        <div className="text-sm text-[#b3b3b3]">Start typing to search songs and artists...</div>
-      )}
+            <span className="text-[12px] text-[#b3b3b3] w-12 text-right">{formatTime(s.duration)}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
-function LibraryView({ currentTrack, isPlaying, state }) {
+function LibraryView({ state, searchQuery, onPlay }) {
+  if (!state) return null
+  const { currentTrack, isPlaying } = state
+
+  const filtered = searchQuery
+    ? playlist.filter(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()) || s.artist.toLowerCase().includes(searchQuery.toLowerCase()))
+    : playlist
+
   return (
     <div className="p-6">
-      <div className="flex items-end gap-5 mb-8">
-        <div className="w-52 h-52 rounded bg-gradient-to-br from-[#1DB954] to-[#0d4721] shrink-0 flex items-center justify-center shadow-2xl">
-          <svg className="w-20 h-20 text-white/60" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-          </svg>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-xs font-semibold uppercase tracking-wider">Playlist</p>
-          <h1 className="text-4xl font-bold text-white leading-tight">Liked Songs</h1>
-          <p className="text-sm text-[#b3b3b3]">Yoshiem · {playlist.length} songs</p>
-        </div>
-      </div>
-      <div className="flex items-center px-4 py-2 text-[11px] text-[#b3b3b3] uppercase tracking-wider font-semibold border-b border-white/10 mb-1">
-        <span className="w-8 text-center">#</span>
-        <span className="flex-1">Title</span>
-        <span className="w-16 text-right">Duration</span>
-      </div>
-      <div className="space-y-0.5">
-        {playlist.map((s, i) => (
-          <button
-            key={i}
-            onClick={() => playTrack(i)}
-            className={`w-full flex items-center gap-3 px-4 py-2 rounded group transition-colors text-left cursor-pointer ${
-              i === currentTrack ? 'bg-white/10' : 'hover:bg-white/5'
-            }`}
-          >
-            <span className={`w-8 text-center text-sm ${i === currentTrack ? 'text-[#1DB954]' : 'text-[#b3b3b3] group-hover:hidden'}`}>
-              {i === currentTrack && isPlaying ? (
-                <span className="text-[#1DB954] text-lg leading-none">♫</span>
-              ) : (
-                i + 1
-              )}
-            </span>
-            <span className="w-8 text-center text-sm text-[#b3b3b3] hidden group-hover:inline">
-              {i === currentTrack ? '' : <svg className="w-4 h-4 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>}
-            </span>
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="w-10 h-10 rounded bg-gradient-to-br from-[#1DB954] to-[#169c46] shrink-0 flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-                </svg>
+      <h1 className="text-xl font-bold text-white mb-4">Your Library</h1>
+      {filtered.length === 0 ? (
+        <p className="text-sm text-[#535353]">No results for &ldquo;{searchQuery}&rdquo;</p>
+      ) : (
+        <div className="space-y-0.5">
+          {filtered.map(s => {
+            const originalIndex = playlist.indexOf(s)
+            return (
+              <div key={originalIndex} className="group flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors">
+                <button onClick={() => { playTrack(originalIndex); onPlay() }} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
+                  <div className={`w-10 h-10 rounded bg-gradient-to-br ${colors[originalIndex % colors.length]} shrink-0 flex items-center justify-center`}>
+                    {originalIndex === currentTrack && isPlaying ? (
+                      <span className="text-white text-sm">♫</span>
+                    ) : (
+                      <span className="text-white/60 text-sm font-bold">{s.title[0]}</span>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className={`text-sm truncate ${originalIndex === currentTrack ? 'text-[#1DB954]' : 'text-white'}`}>{s.title}</p>
+                    <p className="text-[12px] text-[#b3b3b3] truncate">{s.artist}</p>
+                  </div>
+                </button>
+                <span className="text-[12px] text-[#b3b3b3] w-12 text-right">{formatTime(s.duration)}</span>
+                <button
+                  onClick={() => addToQueue(originalIndex)}
+                  className="text-[#535353] hover:text-white text-lg cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity w-8 text-center"
+                  title="Add to queue"
+                >⋮</button>
               </div>
-              <div className="min-w-0">
-                <p className={`text-sm truncate ${i === currentTrack ? 'text-[#1DB954]' : 'text-white'}`}>{s.title}</p>
-                <p className="text-[12px] text-[#b3b3b3] truncate">{s.artist}</p>
-              </div>
-            </div>
-            <span className={`text-sm w-16 text-right ${i === currentTrack ? 'text-[#1DB954]' : 'text-[#b3b3b3]'}`}>{formatTime(s.duration)}</span>
-          </button>
-        ))}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
@@ -276,6 +267,7 @@ function LibraryView({ currentTrack, isPlaying, state }) {
 export default function SpotifyContent() {
   const [state, setState] = useState(null)
   const [activeNav, setActiveNav] = useState('home')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     const unsub = subscribe(s => setState({ ...s }))
@@ -284,26 +276,20 @@ export default function SpotifyContent() {
 
   if (!state) return null
 
-  const { currentTrack, isPlaying } = state
-
-  const renderView = () => {
-    switch (activeNav) {
-      case 'home': return <HomeView />
-      case 'search': return <SearchView />
-      case 'library': return <LibraryView currentTrack={currentTrack} isPlaying={isPlaying} state={state} />
-      default: return <HomeView />
-    }
-  }
+  const handlePlay = () => setActiveNav('now-playing')
 
   return (
     <div className="flex flex-col h-full bg-[#121212] text-white select-none">
+      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <div className="flex flex-1 min-h-0">
-        <Sidebar activeNav={activeNav} onNavChange={setActiveNav} />
+        <Sidebar activeNav={activeNav} onNavChange={v => { setActiveNav(v); setSearchQuery('') }} />
         <main className="flex-1 overflow-y-auto">
-          {renderView()}
+          {activeNav === 'home' && <HomeView onPlay={handlePlay} />}
+          {activeNav === 'now-playing' && <NowPlaying state={state} />}
+          {activeNav === 'library' && <LibraryView state={state} searchQuery={searchQuery} onPlay={handlePlay} />}
         </main>
       </div>
-      <NowPlayingBar state={state} />
+      <PlayerBar state={state} />
     </div>
   )
 }

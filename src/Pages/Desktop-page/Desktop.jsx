@@ -44,6 +44,8 @@ export default function Desktop() {
   const [maxZIndex, setMaxZIndex] = useState(10)
   const [activeWindowId, setActiveWindowId] = useState(null)
   const [isStartMenuOpen, setStartMenuOpen] = useState(false)
+
+  const isAnyMaximized = Object.values(windows).some(w => w.isMaximized)
   
   // Desktop shortcuts (drag from Start Menu)
   const [desktopShortcuts, setDesktopShortcuts] = useState([
@@ -462,7 +464,6 @@ export default function Desktop() {
             onMaximize={() => toggleMaximizeWindow('spotify')}
             onFocus={() => focusWindow('spotify')}
             centerTitle
-            hideIcon
           >
             <SpotifyContent />
           </Window>
@@ -478,13 +479,16 @@ export default function Desktop() {
       />
 
       {/* Bottom Navigation Taskbar */}
-      <div className="absolute bottom-4 inset-x-6 z-50 flex pointer-events-auto">
+      <div className={`absolute z-50 flex pointer-events-auto transition-all duration-200 ${
+        isAnyMaximized ? 'bottom-0 inset-x-0' : 'bottom-4 inset-x-6'
+      }`}>
         <BottomNav 
           windows={windows}
           activeWindowId={activeWindowId}
           onToggleWindow={handleToggleWindow}
           onOpenStartMenu={() => setStartMenuOpen(!isStartMenuOpen)}
           isStartMenuOpen={isStartMenuOpen}
+          isMaximized={isAnyMaximized}
         />
       </div>
     </div>
