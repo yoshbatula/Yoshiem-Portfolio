@@ -50,11 +50,13 @@ export default function Desktop() {
   ])
 
   const dragRef = useRef(null)
+  const movedRef = useRef(false)
   const iconRefs = useRef({})
 
   const handleIconMouseDown = (e, id) => {
     if (e.button !== 0) return
     e.preventDefault()
+    movedRef.current = false
     const zone = document.querySelector('.desktop-dropzone')
     if (!zone) return
     const rect = zone.getBoundingClientRect()
@@ -68,7 +70,7 @@ export default function Desktop() {
       el.style.setProperty('--start-y', `${shortcut.y}%`)
     }
 
-    dragRef.current = { id, startX: e.clientX, startY: e.clientY, moved: false, sx: shortcut.x, sy: shortcut.y, rect }
+    dragRef.current = { id, startX: e.clientX, startY: e.clientY, rect, sx: shortcut.x, sy: shortcut.y }
   }
 
   const handleIconMouseMove = useCallback((e) => {
@@ -76,7 +78,7 @@ export default function Desktop() {
     if (!d) return
     const dx = e.clientX - d.startX
     const dy = e.clientY - d.startY
-    if (Math.hypot(dx, dy) > 3) d.moved = true
+    if (Math.hypot(dx, dy) > 3) movedRef.current = true
 
     const el = iconRefs.current[d.id]
     if (el) {
@@ -94,7 +96,7 @@ export default function Desktop() {
       el.style.removeProperty('--start-y')
     }
 
-    if (d.moved && el) {
+    if (movedRef.current && el) {
       const match = el.style.transform.match(/translate\(([\d.-]+)px, ([\d.-]+)px\)/)
       if (match) {
         const dx = parseFloat(match[1])
@@ -122,7 +124,10 @@ export default function Desktop() {
   }, [handleIconMouseMove, handleIconMouseUp])
 
   const handleIconClick = (e, id) => {
-    if (dragRef.current?.moved) return
+    if (movedRef.current) {
+      movedRef.current = false
+      return
+    }
     openWindow(id)
   }
 
