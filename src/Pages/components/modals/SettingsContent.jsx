@@ -9,6 +9,7 @@ export default function SettingsContent({
   const fileInputRef = useRef(null)
   const systemInfoRef = useRef(null)
 
+  // Predefined wallpapers (one image + gradients)
   const wallpapers = [
     { id: 'default', name: 'Plasma Wave', type: 'image' },
     { id: 'neon', name: 'Deep Neon Aurora', type: 'gradient', value: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' },
