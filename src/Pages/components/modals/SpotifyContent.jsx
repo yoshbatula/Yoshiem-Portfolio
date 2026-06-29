@@ -9,10 +9,22 @@ function formatTime(seconds) {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-function Header({ searchQuery, onSearchChange }) {
+function Header({ searchQuery, onSearchChange, isSearching, onClose }) {
+  const ref = useRef(null)
+  const filtered = searchQuery
+    ? playlist.filter(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()) || s.artist.toLowerCase().includes(searchQuery.toLowerCase()))
+    : playlist
+
+  useEffect(() => {
+    if (!isSearching) return
+    const onDown = e => { if (ref.current && !ref.current.contains(e.target)) onClose() }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [isSearching, onClose])
+
   return (
     <div className="flex items-center justify-center px-5 py-2.5 bg-[#121212] border-b border-white/5 shrink-0">
-      <div className="relative w-full max-w-md">
+      <div ref={ref} className="relative w-full max-w-md">
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b3b3b3]" viewBox="0 0 24 24" fill="currentColor">
           <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
         </svg>
@@ -21,8 +33,33 @@ function Header({ searchQuery, onSearchChange }) {
           placeholder="What do you want to listen to?"
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
+          onFocus={() => onSearchChange(searchQuery)}
           className="w-full pl-9 pr-3 py-1.5 rounded-full bg-[#242424] text-sm text-white placeholder-[#b3b3b3] outline-none focus:ring-2 focus:ring-white/20 transition-all"
         />
+        {isSearching && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-[#282828] rounded-lg shadow-2xl border border-white/10 max-h-80 overflow-y-auto z-50 py-2">
+            {filtered.length === 0 ? (
+              <p className="text-sm text-[#535353] px-4 py-3">No results for &ldquo;{searchQuery}&rdquo;</p>
+            ) : (
+              filtered.map(s => {
+                const originalIndex = playlist.indexOf(s)
+                return (
+                  <button
+                    key={originalIndex}
+                    onClick={() => { playTrackWithQueue(originalIndex); onClose() }}
+                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors text-left cursor-pointer"
+                  >
+                    <img src={s.artwork} alt={s.title} className="w-10 h-10 rounded object-cover shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm text-white truncate">{s.title}</p>
+                      <p className="text-[12px] text-[#b3b3b3] truncate">{s.artist}</p>
+                    </div>
+                  </button>
+                )
+              })
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -439,48 +476,11 @@ function LibraryView({ state, searchQuery }) {
   )
 }
 
-function SearchResults({ searchQuery }) {
-  const filtered = searchQuery
-    ? playlist.filter(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()) || s.artist.toLowerCase().includes(searchQuery.toLowerCase()))
-    : []
-  return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold text-white mb-4">Search Results</h1>
-      {filtered.length === 0 ? (
-        <p className="text-sm text-[#535353]">No results for &ldquo;{searchQuery}&rdquo;</p>
-      ) : (
-        <div className="space-y-0.5">
-          {filtered.map(s => {
-            const originalIndex = playlist.indexOf(s)
-            return (
-              <div key={originalIndex} className="group flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors">
-                <button onClick={() => playTrackWithQueue(originalIndex)} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
-                  <div className="w-10 h-10 rounded shrink-0 relative overflow-hidden">
-                    <img src={s.artwork} alt={s.title} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm text-white truncate">{s.title}</p>
-                    <p className="text-[12px] text-[#b3b3b3] truncate">{s.artist}</p>
-                  </div>
-                </button>
-              </div>
-            )
-          })}
-        </div>
-      )}
-    </div>
-  )
-}
-
 export default function SpotifyContent() {
   const [state, setState] = useState(null)
   const [activeNav, setActiveNav] = useState('home')
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
   const [showQueue, setShowQueue] = useState(false)
   const [showLyrics, setShowLyrics] = useState(false)
 
@@ -518,15 +518,14 @@ export default function SpotifyContent() {
 
   return (
     <div className="flex flex-col h-full bg-[#121212] text-white select-none">
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Header searchQuery={searchQuery} onSearchChange={v => { setSearchQuery(v); setIsSearching(true) }} isSearching={isSearching} onClose={() => setIsSearching(false)} />
       <div className="flex flex-1 min-h-0">
-        <Sidebar activeNav={showLyrics ? '' : activeNav} onNavChange={v => { setActiveNav(v); setSearchQuery(''); setShowLyrics(false) }} />
+        <Sidebar activeNav={isSearching ? '' : showLyrics ? '' : activeNav} onNavChange={v => { setActiveNav(v); setSearchQuery(''); setIsSearching(false); setShowLyrics(false) }} />
         <main className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3e4446] scrollbar-track-transparent">
-          {searchQuery && <SearchResults searchQuery={searchQuery} />}
-          {!searchQuery && showLyrics && <LyricsPage state={state} />}
-          {!searchQuery && !showLyrics && activeNav === 'home' && <HomeView />}
-          {!searchQuery && !showLyrics && activeNav === 'now-playing' && <NowPlaying state={state} />}
-          {!searchQuery && !showLyrics && activeNav === 'library' && <LibraryView state={state} />}
+          {showLyrics && <LyricsPage state={state} />}
+          {!showLyrics && activeNav === 'home' && <HomeView />}
+          {!showLyrics && activeNav === 'now-playing' && <NowPlaying state={state} />}
+          {!showLyrics && activeNav === 'library' && <LibraryView state={state} />}
         </main>
         {rightPanel}
       </div>
