@@ -319,11 +319,12 @@ function notify() {
 }
 
 function playSrc() {
-  audio.play().catch(() => {
+  audio.play().catch((err) => {
+    console.error('spotifyPlayer play() failed:', err, 'src:', audio.src)
     if (audio.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-      audio.play().catch(() => {})
+      audio.play().catch((e) => console.error('spotifyPlayer retry failed:', e))
     } else {
-      audio.addEventListener('canplay', () => audio.play().catch(() => {}), { once: true })
+      audio.addEventListener('canplay', () => audio.play().catch((e) => console.error('spotifyPlayer canplay failed:', e)), { once: true })
     }
   })
 }

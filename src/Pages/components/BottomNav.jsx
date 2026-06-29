@@ -6,6 +6,7 @@ import EthernetIcon from "../../assets/EthernetIcon.svg"
 import MicrophoneIcon from "../../assets/Microphone.svg"
 import SpotifyIcon from "../../assets/SpotifyIcon .svg"
 import { useState, useEffect, useRef } from 'react'
+import { setVolume as setAudioVolume, subscribe } from '../../utils/spotifyPlayer'
 
 export default function BottomNav({
   windows = {},
@@ -30,6 +31,13 @@ export default function BottomNav({
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const unsub = subscribe((state) => {
+      setVolume(Math.round(state.volume * 100))
+    })
+    return unsub
   }, [])
 
   useEffect(() => {
@@ -202,7 +210,7 @@ export default function BottomNav({
                         min="0"
                         max="100"
                         value={muted ? 0 : volume}
-                        onChange={(e) => { setVolume(Number(e.target.value)); setMuted(false) }}
+                        onChange={(e) => { const v = Number(e.target.value); setVolume(v); setAudioVolume(v / 100); setMuted(false) }}
                         style={{ background: `linear-gradient(to right, #3daee9 0%, #3daee9 ${muted ? 0 : volume}%, #3e4446 ${muted ? 0 : volume}%, #3e4446 100%)` }}
                         className="flex-1 h-1 appearance-none rounded-full outline-none cursor-pointer
                           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
