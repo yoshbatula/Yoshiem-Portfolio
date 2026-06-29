@@ -3,6 +3,10 @@ import ThinkingOfYou from '../assets/music/ThinkingOfYou.mp3'
 import WayILovedYou from '../assets/music/WayILovedYou.mp3'
 import YouBelongWithMe from '../assets/music/YouBelongWithMe.mp3'
 import AboutYou from '../assets/music/AboutYou.mp3'
+import EnchantedAlbum from '../assets/EnchantedAlbum.jpg'
+import ThinkingOfYouAlbum from '../assets/ThinkingOfYouAlbum.jpg'
+import TheWayILovedYouAlbum from '../assets/TheWayILovedYouAlbum.jpeg'
+import AboutYouAlbum from '../assets/AboutYouAlbum.png'
 
 export const playlist = [
   {
@@ -11,6 +15,7 @@ export const playlist = [
     artist: 'Taylor Swift',
     src: Enchanted,
     duration: 352.2,
+    artwork: EnchantedAlbum,
     lyrics: [
       { time: 13.40, text: 'There I was again tonight' },
       { time: 16.25, text: 'Forcing laughter, faking smiles' },
@@ -75,52 +80,68 @@ export const playlist = [
     artist: 'Katy Perry',
     src: ThinkingOfYou,
     duration: 259.5,
+    artwork: ThinkingOfYouAlbum,
     lyrics: [
-      { time: 0.49, text: 'Comparisons are easily done' },
-      { time: 6.63, text: 'Once you\'ve had a taste of perfection' },
-      { time: 13.15, text: 'Like an apple hanging from a tree' },
-      { time: 19.55, text: 'I picked the ripest one' },
-      { time: 23.08, text: 'I still got the seed' },
-      { time: 27.43, text: 'You said move on, where do I go?' },
-      { time: 33.72, text: 'I guess second best is all I will know' },
-      { time: 40.74, text: '\'Cause when I\'m with him, I am thinking of you (thinking of you, thinking of you)' },
-      { time: 48.50, text: 'Thinking of you' },
-      { time: 51.78, text: 'What you would do if' },
-      { time: 54.67, text: 'You were the one who was spending the night' },
-      { time: 59.32, text: '(Spending the night, spending the night)' },
-      { time: 61.83, text: 'Oh, I wish that I was looking into your eyes' },
-      { time: 81.22, text: 'You\'re like an Indian summer in the middle of winter' },
-      { time: 88.21, text: 'Like a hard candy with a surprise center' },
-      { time: 94.79, text: 'How do I get better once I\'ve had the best?' },
-      { time: 100.91, text: 'You said there\'s tons of fish in the water' },
-      { time: 104.53, text: 'So the waters I will test' },
-      { time: 109.27, text: 'He kissed my lips, I taste your mouth (I taste your mouth), oh' },
-      { time: 115.45, text: 'He pulled me in, I was disgusted with myself' },
-      { time: 122.52, text: '\'Cause when I\'m with him, I am thinking of you (thinking of you, thinking of you)' },
-      { time: 130.02, text: 'Thinking of you' },
-      { time: 133.58, text: 'What you would do if' },
-      { time: 136.39, text: 'You were the one who was spending the night' },
-      { time: 141.30, text: '(Spending the night, spending the night)' },
-      { time: 143.44, text: 'Oh, I wish that I was looking into your-' },
-      { time: 148.66, text: 'You\'re the best' },
-      { time: 150.86, text: 'And yes, I do regret' },
-      { time: 154.39, text: 'How I could let myself let you go' },
-      { time: 161.62, text: 'Oh-oh, now, now the lesson\'s learned' },
-      { time: 167.18, text: 'I touched it, I was burned' },
-      { time: 170.48, text: 'Oh, I think you should know' },
-      { time: 174.66, text: '\'Cause when I\'m with him, I am thinking of you (thinking of you, thinking of you)' },
-      { time: 182.43, text: 'Thinking of you (oh)' },
-      { time: 185.63, text: 'What you would do if' },
-      { time: 188.54, text: 'You were the one who was spending the night' },
-      { time: 193.28, text: '(Spending the night, spending the night)' },
-      { time: 195.65, text: 'Oh, I wish that I was looking into your eyes' },
-      { time: 203.29, text: 'Looking into your eyes' },
-      { time: 206.68, text: 'Looking into your eyes' },
-      { time: 211.63, text: 'Oh, won\'t you walk through' },
-      { time: 213.96, text: 'And bust in the door and take me away?' },
-      { time: 220.40, text: 'Oh, no more mistakes' },
-      { time: 224.07, text: '\'Cause in your eyes, I\'d like to stay' },
-      { time: 235.58, text: 'Stay-y-y' },
+      { time: 13.52, text: 'Comparisons are easily done' },
+      { time: 19.79, text: 'Once you\'ve had a taste of perfection' },
+      { time: 26.14, text: 'Like an apple hanging from a tree' },
+      { time: 32.29, text: 'I picked the ripest one' },
+      { time: 35.80, text: 'I still got the seed' },
+      { time: 40.53, text: 'You said move on' },
+      { time: 42.02, text: 'Where do I go?' },
+      { time: 46.79, text: 'I guess second best' },
+      { time: 49.54, text: 'Is all I will know' },
+      { time: 54.04, text: '\'Cause when I\'m with him' },
+      { time: 57.30, text: 'I am thinking of you' },
+      { time: 61.78, text: 'Thinking of you' },
+      { time: 65.03, text: 'What you would do if' },
+      { time: 68.04, text: 'You were the one' },
+      { time: 70.29, text: 'Who was spending the night' },
+      { time: 74.79, text: 'Oh I wish that I' },
+      { time: 77.31, text: 'Was looking into your eyes' },
+      { time: 94.31, text: 'You\'re like an Indian summer' },
+      { time: 97.79, text: 'In the middle of winter' },
+      { time: 101.55, text: 'Like a hard candy' },
+      { time: 104.42, text: 'With a surprise center' },
+      { time: 107.92, text: 'How do I get better' },
+      { time: 111.17, text: 'Once I\'ve had the best?' },
+      { time: 114.15, text: 'You said there\'s' },
+      { time: 115.66, text: 'Tons of fish in the water' },
+      { time: 117.67, text: 'So the waters I will test' },
+      { time: 122.20, text: 'He kissed my lips' },
+      { time: 123.67, text: 'I taste your mouth' },
+      { time: 128.43, text: 'He pulled me in' },
+      { time: 130.16, text: 'I was disgusted with myself' },
+      { time: 135.74, text: '\'Cause when I\'m with him' },
+      { time: 138.88, text: 'I am thinking of you' },
+      { time: 143.15, text: 'Thinking of you' },
+      { time: 146.39, text: 'What you would do if' },
+      { time: 149.38, text: 'You were the one' },
+      { time: 151.86, text: 'Who was spending the night' },
+      { time: 156.36, text: 'Oh I wish that I' },
+      { time: 158.90, text: 'Was looking into...' },
+      { time: 161.04, text: 'You\'re the best' },
+      { time: 163.77, text: 'And yes I do regret' },
+      { time: 167.53, text: 'How I could let myself' },
+      { time: 172.27, text: 'Let you go' },
+      { time: 175.80, text: 'Now, now the lesson\'s learned' },
+      { time: 180.28, text: 'I touched it I was burned' },
+      { time: 183.52, text: 'Oh I think you should know' },
+      { time: 188.02, text: '\'Cause when I\'m with him' },
+      { time: 191.02, text: 'I am thinking of you' },
+      { time: 195.77, text: 'Thinking of you' },
+      { time: 199.02, text: 'What you would do if' },
+      { time: 201.99, text: 'You were the one' },
+      { time: 204.29, text: 'Who was spending the night' },
+      { time: 208.77, text: 'Oh I wish that I' },
+      { time: 211.27, text: 'Was looking into your eyes' },
+      { time: 216.27, text: 'Looking into your eyes' },
+      { time: 219.52, text: 'Looking into your eyes' },
+      { time: 224.77, text: 'Oh won\'t you walk through' },
+      { time: 227.52, text: 'And bust in the door' },
+      { time: 230.52, text: 'And take me away' },
+      { time: 234.03, text: 'Oh no more mistakes' },
+      { time: 237.27, text: '\'Cause in your eyes I\'d like to stay... stay' },
     ],
   },
   {
@@ -129,6 +150,7 @@ export const playlist = [
     artist: 'Taylor Swift',
     src: WayILovedYou,
     duration: 245.6,
+    artwork: TheWayILovedYouAlbum,
     lyrics: [
       { time: 24.18, text: 'He is sensible and so incredible' },
       { time: 29.43, text: 'And all my single friends are jealous' },
@@ -187,6 +209,7 @@ export const playlist = [
     artist: 'Taylor Swift',
     src: YouBelongWithMe,
     duration: 228.6,
+    artwork: TheWayILovedYouAlbum,
     lyrics: [
       { time: 7.59, text: 'You\'re on the phone with your girlfriend, she\'s upset' },
       { time: 11.46, text: 'She\'s going off about something that you said' },
@@ -241,6 +264,7 @@ export const playlist = [
     artist: 'The 1975',
     src: AboutYou,
     duration: 326.5,
+    artwork: AboutYouAlbum,
     lyrics: [
       { time: 44.51, text: 'I know a place' },
       { time: 53.93, text: 'It\'s somewhere I go when I need to remember your face' },
@@ -328,6 +352,14 @@ export function togglePlay() {
     isPlaying = false
   }
   notify()
+}
+
+export function pause() {
+  if (isPlaying) {
+    audio.pause()
+    isPlaying = false
+    notify()
+  }
 }
 
 export function playTrackWithQueue(index) {

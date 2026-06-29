@@ -191,7 +191,7 @@ export default function Desktop() {
   const closeWindow = (id) => {
     setWindows(prev => ({
       ...prev,
-      [id]: { ...prev[id], isOpen: false }
+      [id]: { ...prev[id], isOpen: false, isMaximized: false }
     }))
     if (activeWindowId === id) {
       const remaining = Object.values(windows)
@@ -204,7 +204,7 @@ export default function Desktop() {
   const minimizeWindow = (id) => {
     setWindows(prev => ({
       ...prev,
-      [id]: { ...prev[id], isMinimized: true }
+      [id]: { ...prev[id], isMinimized: true, isMaximized: false }
     }))
     if (activeWindowId === id) {
       const remaining = Object.values(windows)

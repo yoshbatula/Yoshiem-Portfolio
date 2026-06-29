@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import UserAvatar from '../../../assets/UserAvatar.svg'
-import { playlist, subscribe, togglePlay, nextTrack, prevTrack, playTrackWithQueue, seekTo, setVolume, addToQueue, removeFromQueue } from '../../../utils/spotifyPlayer'
-
-const colors = ['from-[#1DB954] to-[#169c46]', 'from-[#E13300] to-[#ff6b35]', 'from-[#9b59b6] to-[#6c3483]', 'from-[#2980b9] to-[#154360]', 'from-[#f39c12] to-[#b7950b]']
+import { playlist, subscribe, togglePlay, pause, nextTrack, prevTrack, playTrackWithQueue, seekTo, setVolume, addToQueue, removeFromQueue } from '../../../utils/spotifyPlayer'
 
 function formatTime(seconds) {
   if (!seconds || isNaN(seconds)) return '0:00'
@@ -54,9 +52,7 @@ function QueuePanel({ state, onClose }) {
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3e4446] scrollbar-track-transparent p-3 space-y-1">
         <p className="text-[10px] font-semibold uppercase tracking-wider text-[#b3b3b3] px-1 pb-1">Now Playing</p>
         <div className="flex items-center gap-3 px-3 py-2 rounded bg-white/5">
-          <div className={`w-9 h-9 rounded bg-gradient-to-br ${colors[currentTrack % colors.length]} shrink-0 flex items-center justify-center`}>
-            <span className="text-white/60 text-xs font-bold">{track.title[0]}</span>
-          </div>
+          <img src={track.artwork} alt={track.title} className="w-9 h-9 rounded object-cover shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="text-[12px] text-white truncate">{track.title}</p>
             <p className="text-[10px] text-[#b3b3b3] truncate">{track.artist}</p>
@@ -72,9 +68,7 @@ function QueuePanel({ state, onClose }) {
                 <div key={`q-${i}`} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-white/5 transition-colors group">
                   <span className="text-[11px] text-[#535353] w-4 shrink-0">{i + 1}</span>
                   <button onClick={() => playTrackWithQueue(trackId)} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
-                    <div className={`w-9 h-9 rounded bg-gradient-to-br ${colors[trackId % colors.length]} shrink-0 flex items-center justify-center`}>
-                      <span className="text-white/50 text-xs font-bold">{s.title[0]}</span>
-                    </div>
+                    <img src={s.artwork} alt={s.title} className="w-9 h-9 rounded object-cover shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="text-[12px] text-white truncate">{s.title}</p>
                       <p className="text-[10px] text-[#b3b3b3] truncate">{s.artist}</p>
@@ -96,9 +90,7 @@ function QueuePanel({ state, onClose }) {
                 <div key={`r-${i}`} className="flex items-center gap-3 px-3 py-2 rounded hover:bg-white/5 transition-colors group">
                   <span className="text-[11px] text-[#535353] w-4 shrink-0">{i + 1}</span>
                   <button onClick={() => playTrackWithQueue(trackId)} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
-                    <div className={`w-9 h-9 rounded bg-gradient-to-br ${colors[trackId % colors.length]} shrink-0 flex items-center justify-center`}>
-                      <span className="text-white/50 text-xs font-bold">{s.title[0]}</span>
-                    </div>
+                    <img src={s.artwork} alt={s.title} className="w-9 h-9 rounded object-cover shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="text-[12px] text-white truncate">{s.title}</p>
                       <p className="text-[10px] text-[#b3b3b3] truncate">{s.artist}</p>
@@ -167,10 +159,10 @@ function AnimatedLyrics({ state, compact }) {
               ref={el => { lineRefs.current[i] = el }}
               className={`transition-all duration-500 ease-out leading-relaxed py-0.5 ${
                 isCurrent
-                  ? 'text-white translate-y-0 ' + (compact ? 'text-base font-semibold' : 'text-xl font-bold') + ' scale-100 opacity-100'
+                  ? 'text-white translate-y-0 ' + (compact ? 'text-lg font-semibold' : 'text-2xl font-bold') + ' scale-100 opacity-100'
                   : isPast
-                    ? 'text-[#454545] ' + (compact ? 'text-sm' : 'text-[15px]') + ' scale-90 opacity-25'
-                    : 'text-[#6a6a6a] ' + (compact ? 'text-sm' : 'text-[15px]') + ' scale-95 opacity-40'
+                    ? 'text-[#454545] ' + (compact ? 'text-sm' : 'text-base') + ' scale-90 opacity-25'
+                    : 'text-[#6a6a6a] ' + (compact ? 'text-sm' : 'text-base') + ' scale-95 opacity-40'
               }`}
             >
               {line.text}
@@ -236,9 +228,7 @@ function PlayerBar({ state, showQueue, onToggleQueue, showLyrics, onToggleLyrics
   return (
     <div className="h-[72px] shrink-0 bg-[#181818] border-t border-white/5 flex items-center px-4 gap-4 relative">
       <button onClick={onShowNowPlaying} className="flex items-center gap-3 min-w-0 w-[30%] text-left cursor-pointer group">
-        <div className={`w-12 h-12 rounded bg-gradient-to-br ${colors[track.id % colors.length]} shrink-0 flex items-center justify-center`}>
-          <span className="text-white/40 text-lg font-bold">{track.title[0]}</span>
-        </div>
+        <img src={track.artwork} alt={track.title} className="w-12 h-12 rounded object-cover shrink-0" />
         <div className="min-w-0">
           <p className="text-sm text-white truncate group-hover:underline">{track.title}</p>
           <p className="text-[11px] text-[#b3b3b3] truncate">{track.artist}</p>
@@ -307,9 +297,7 @@ function NowPlaying({ state }) {
 
   return (
     <div className="p-8 flex gap-8 items-start">
-      <div className={`w-60 h-60 rounded bg-gradient-to-br ${colors[track.id % colors.length]} shrink-0 flex items-center justify-center shadow-2xl`}>
-        <span className="text-7xl text-white/30 font-bold">{track.title[0]}</span>
-      </div>
+      <img src={track.artwork} alt={track.title} className="w-60 h-60 rounded object-cover shrink-0 shadow-2xl" />
       <div className="flex-1 min-w-0 space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-[#b3b3b3] mb-1">Now Playing</p>
@@ -382,11 +370,13 @@ function HomeView() {
         {playlist.map((s, i) => (
           <div key={i} className="group flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors">
             <button onClick={() => playTrackWithQueue(i)} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
-              <div className={`w-10 h-10 rounded bg-gradient-to-br ${colors[i % colors.length]} shrink-0 flex items-center justify-center relative`}>
-                <span className="text-white/60 text-sm font-bold group-hover:hidden">{s.title[0]}</span>
-                <svg className="w-4 h-4 text-white hidden group-hover:block" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+              <div className="w-10 h-10 rounded shrink-0 relative overflow-hidden">
+                <img src={s.artwork} alt={s.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
               </div>
               <div className="min-w-0">
                 <p className="text-sm text-white truncate">{s.title}</p>
@@ -421,11 +411,12 @@ function LibraryView({ state, searchQuery }) {
             return (
               <div key={originalIndex} className="group flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors">
                 <button onClick={() => playTrackWithQueue(originalIndex)} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
-                  <div className={`w-10 h-10 rounded bg-gradient-to-br ${colors[originalIndex % colors.length]} shrink-0 flex items-center justify-center`}>
-                    {originalIndex === currentTrack && isPlaying ? (
-                      <span className="text-white text-sm">♫</span>
-                    ) : (
-                      <span className="text-white/60 text-sm font-bold">{s.title[0]}</span>
+                  <div className="w-10 h-10 rounded shrink-0 relative overflow-hidden">
+                    <img src={s.artwork} alt={s.title} className="w-full h-full object-cover" />
+                    {originalIndex === currentTrack && isPlaying && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <span className="text-white text-sm">♫</span>
+                      </div>
                     )}
                   </div>
                   <div className="min-w-0">
@@ -448,6 +439,44 @@ function LibraryView({ state, searchQuery }) {
   )
 }
 
+function SearchResults({ searchQuery }) {
+  const filtered = searchQuery
+    ? playlist.filter(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()) || s.artist.toLowerCase().includes(searchQuery.toLowerCase()))
+    : []
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold text-white mb-4">Search Results</h1>
+      {filtered.length === 0 ? (
+        <p className="text-sm text-[#535353]">No results for &ldquo;{searchQuery}&rdquo;</p>
+      ) : (
+        <div className="space-y-0.5">
+          {filtered.map(s => {
+            const originalIndex = playlist.indexOf(s)
+            return (
+              <div key={originalIndex} className="group flex items-center gap-3 px-4 py-2 rounded hover:bg-white/5 transition-colors">
+                <button onClick={() => playTrackWithQueue(originalIndex)} className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
+                  <div className="w-10 h-10 rounded shrink-0 relative overflow-hidden">
+                    <img src={s.artwork} alt={s.title} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm text-white truncate">{s.title}</p>
+                    <p className="text-[12px] text-[#b3b3b3] truncate">{s.artist}</p>
+                  </div>
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function SpotifyContent() {
   const [state, setState] = useState(null)
   const [activeNav, setActiveNav] = useState('home')
@@ -457,7 +486,10 @@ export default function SpotifyContent() {
 
   useEffect(() => {
     const unsub = subscribe(s => setState({ ...s }))
-    return unsub
+    return () => {
+      unsub()
+      pause()
+    }
   }, [])
 
   const prevTrackRef = useRef(-1)
@@ -490,10 +522,11 @@ export default function SpotifyContent() {
       <div className="flex flex-1 min-h-0">
         <Sidebar activeNav={showLyrics ? '' : activeNav} onNavChange={v => { setActiveNav(v); setSearchQuery(''); setShowLyrics(false) }} />
         <main className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3e4446] scrollbar-track-transparent">
-          {showLyrics && <LyricsPage state={state} />}
-          {!showLyrics && activeNav === 'home' && <HomeView />}
-          {!showLyrics && activeNav === 'now-playing' && <NowPlaying state={state} />}
-          {!showLyrics && activeNav === 'library' && <LibraryView state={state} searchQuery={searchQuery} />}
+          {searchQuery && <SearchResults searchQuery={searchQuery} />}
+          {!searchQuery && showLyrics && <LyricsPage state={state} />}
+          {!searchQuery && !showLyrics && activeNav === 'home' && <HomeView />}
+          {!searchQuery && !showLyrics && activeNav === 'now-playing' && <NowPlaying state={state} />}
+          {!searchQuery && !showLyrics && activeNav === 'library' && <LibraryView state={state} />}
         </main>
         {rightPanel}
       </div>
